@@ -39,6 +39,13 @@ body { background: #f5efe4; }
   border: 1.5px solid #c0a070; background: #fef8f0; color: #6a4a30;
 }
 .btn:hover { background: #f0e6d4; }
+.btn-export {
+  font-family: 'Noto Sans KR', sans-serif; font-size: 1rem; font-weight: 700;
+  padding: 12px 36px; border-radius: 8px; cursor: pointer; transition: all 0.15s;
+  background: #b03030; color: #fff; border: 2px solid #b03030;
+}
+.btn-export:hover { background: #922828; }
+.btn-export:disabled { opacity: 0.6; cursor: wait; }
 .btn-p { background: #b03030; color: #fff; border-color: #b03030; }
 .btn-p:hover { background: #922828; }
 .btn-p:disabled { opacity: 0.6; cursor: wait; }
@@ -66,6 +73,7 @@ body { background: #f5efe4; }
   font-size: 0.78rem; letter-spacing: 0.8px;
 }
 .lp { font-size: 0.55rem; opacity: 0.35; margin-top: 1px; letter-spacing: 2px; }
+.logo-img { max-width: 90%; max-height: 36px; object-fit: contain; margin-top: 2px; display: block; margin-left: auto; margin-right: auto; }
 .sc {
   position: absolute; top: 3px; right: 5px;
   font-size: 0.6rem; opacity: 0.5; font-weight: 500;
@@ -99,6 +107,284 @@ body { background: #f5efe4; }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.9/babel.min.js"></script>
 <script type="text/babel">
+const { useState, useEffect, useCallback } = React;
+
+const SERIES = [
+  { id:"ff1",title:"FINAL FANTASY I",col:0,games:[{id:"ff1_main",name:"파이널 판타지 I"}] },
+  { id:"ff2",title:"FINAL FANTASY II",col:0,games:[{id:"ff2_main",name:"파이널 판타지 II"},{id:"ff2_soul",name:"소울 오브 리버스"}] },
+  { id:"ff3",title:"FINAL FANTASY III",col:0,games:[{id:"ff3_main",name:"파이널 판타지 III"}] },
+  { id:"ff4",title:"FINAL FANTASY IV",col:0,games:[{id:"ff4_main",name:"파이널 판타지 IV"},{id:"ff4_tay",name:"The After Years 달의 귀환"}] },
+  { id:"ff5",title:"FINAL FANTASY V",col:0,games:[{id:"ff5_main",name:"파이널 판타지 V"}] },
+  { id:"ff6",title:"FINAL FANTASY VI",col:0,games:[{id:"ff6_main",name:"파이널 판타지 VI"}] },
+  { id:"ff7",title:"FINAL FANTASY VII",col:0,games:[
+    {id:"ff7_main",name:"파이널 판타지 VII"},{id:"ff7_ac",name:"어드벤트 칠드런 (컴플리트)"},
+    {id:"ff7_bc",name:"비포 크라이시스"},{id:"ff7_cc",name:"크라이시스 코어 (리유니온)"},
+    {id:"ff7_dc",name:"더지 오브 케르베로스"},{id:"ff7_r",name:"파이널 판타지 VII Remake"},
+    {id:"ff7_ec",name:"에버 크라이시스"},{id:"ff7_rb",name:"파이널 판타지 VII Rebirth"}
+  ]},
+  { id:"ff8",title:"FINAL FANTASY VIII",col:1,games:[{id:"ff8_main",name:"파이널 판타지 VIII"}] },
+  { id:"ff9",title:"FINAL FANTASY IX",col:1,games:[{id:"ff9_main",name:"파이널 판타지 IX"}] },
+  { id:"ff10",title:"FINAL FANTASY X",col:1,games:[{id:"ff10_main",name:"파이널 판타지 X"},{id:"ff10_2",name:"파이널 판타지 X-2"}] },
+  { id:"ff11",title:"FINAL FANTASY XI",col:1,games:[
+    {id:"ff11_zilart",name:"지라트의 환영"},{id:"ff11_promathia",name:"프로마시아의 주박"},
+    {id:"ff11_aht",name:"아르토간의 보물"},{id:"ff11_altana",name:"알타나의 신병"},
+    {id:"ff11_adoulin",name:"아두린의 미경"},{id:"ff11_rhapsodies",name:"바나딜의 별노래"},
+    {id:"ff11_voracious",name:"식세의 엠브리오"}
+  ]},
+  { id:"ff12",title:"FINAL FANTASY XII",col:1,games:[{id:"ff12_main",name:"파이널 판타지 XII"},{id:"ff12_rw",name:"레버넌트 윙"}] },
+  { id:"ff13",title:"FINAL FANTASY XIII",col:1,games:[
+    {id:"ff13_main",name:"파이널 판타지 XIII"},{id:"ff13_2",name:"파이널 판타지 XIII-2"},
+    {id:"ff13_lr",name:"라이트닝 리턴즈 파이널 판타지 XIII"}
+  ]},
+  { id:"ff14",title:"FINAL FANTASY XIV",col:2,games:[
+    {id:"ff14_arr",name:"신생 에오르제아"},{id:"ff14_hw",name:"창천의 이슈가르드"},
+    {id:"ff14_sb",name:"홍련의 해방자"},{id:"ff14_shb",name:"칠흑의 반역자"},
+    {id:"ff14_ew",name:"효월의 종언"},{id:"ff14_dt",name:"황금의 레거시"}
+  ]},
+  { id:"ff15",title:"FINAL FANTASY XV",col:2,games:[
+    {id:"ff15_main",name:"파이널 판타지 XV"},{id:"ff15_glad",name:"에피소드 글라디올러스"},
+    {id:"ff15_ignis",name:"에피소드 이그니스"},{id:"ff15_prompto",name:"에피소드 프롬프토"},
+    {id:"ff15_ardyn",name:"에피소드 아덴"},{id:"ff15_brotherhood",name:"브라더후드"},
+    {id:"ff15_kingsglaive",name:"킹스글레이브"}
+  ]},
+  { id:"ff16",title:"FINAL FANTASY XVI",col:2,games:[{id:"ff16_main",name:"파이널 판타지 XVI"}] },
+  { id:"type0",title:"FINAL FANTASY TYPE-0",col:2,games:[{id:"type0_main",name:"파이널 판타지 Type-0"}] },
+  { id:"tactics",title:"FF TACTICS",col:3,games:[
+    {id:"fft_main",name:"파이널 판타지 택틱스 사자전쟁"},{id:"fft_a",name:"파이널 판타지 택틱스 어드밴스"}
+  ]},
+  { id:"worldof",title:"WORLD OF FF",col:3,games:[
+    {id:"woff_main",name:"월드 오브 파이널 판타지"},{id:"woff_maxima",name:"월드 오브 파이널 판타지 맥시마"}
+  ]},
+  { id:"sop",title:"STRANGER OF PARADISE",col:3,games:[
+    {id:"sop_main",name:"스트레인저 오브 파라다이스 FFO"},{id:"sop_bahamut",name:"용왕 바하무트의 시련"},
+    {id:"sop_gilgamesh",name:"자원의 방랑자 길가메시"},{id:"sop_df",name:"Different Future"}
+  ]},
+  { id:"theatrhythm",title:"THEATRHYTHM",col:3,games:[
+    {id:"thr_cc",name:"시아트리듬 FF 커튼콜"},{id:"thr_fbl",name:"시아트리듬 FF 파이널 바 라인"}
+  ]},
+  { id:"dissidia",title:"DISSIDIA",col:3,games:[
+    {id:"dis_main",name:"디시디아 파이널 판타지"},{id:"dis_012",name:"디시디아 듀오데심 파이널 판타지"},
+    {id:"dis_nt",name:"디시디아 파이널 판타지 NT"},{id:"dis_oo",name:"디시디아 파이널 판타지 Opera Omnia"}
+  ]},
+];
+
+const TOTAL_GAMES = SERIES.reduce((s,x) => s + x.games.length, 0);
+const COLS = [0,1,2,3];
+const LC = {
+  ff1:"#4a7dc9",ff2:"#c9982e",ff3:"#9040b8",ff4:"#1e8a4e",ff5:"#d06818",ff6:"#149878",
+  ff7:"#2878c0",ff8:"#7838a0",ff9:"#c8a020",ff10:"#0098b0",ff11:"#607080",ff12:"#b08830",
+  ff13:"#d03838",ff14:"#283888",ff15:"#181830",ff16:"#780808",type0:"#c80808",tactics:"#584830",
+  worldof:"#c07828",sop:"#383858",theatrhythm:"#b82868",dissidia:"#3050c0",
+};
+
+// 로고 파일 경로: logos/ 폴더에 시리즈 id.webp로 넣으면 됨
+// 예: logos/ff1.webp, logos/ff7.webp, logos/ff14.webp ...
+const LOGO_DIR = "logos/";
+const LOGO_EXT = ".webp";
+
+function load(k,d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } }
+function save(k,v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+
+function App() {
+  const [played, setPlayed] = useState(() => load("ff-played", {}));
+  const [saving, setSaving] = useState(false);
+  const [subtitle, setSubtitle] = useState(() => load("ff-sub", "도장을 찍을 때마다 스퀘어에닉스를 용서하지 않는 중"));
+  const [editingSub, setEditingSub] = useState(false);
+  const [logoLoaded, setLogoLoaded] = useState({});
+
+  // 로고 이미지 사전 로드
+  useEffect(() => {
+    SERIES.forEach(s => {
+      const img = new Image();
+      img.onload = () => setLogoLoaded(prev => ({...prev, [s.id]: img}));
+      img.onerror = () => {}; // 파일 없으면 무시, 텍스트 폴백
+      img.src = LOGO_DIR + s.id + LOGO_EXT;
+    });
+  }, []);
+
+  useEffect(() => { save("ff-played", played); }, [played]);
+
+  const toggle = (id) => setPlayed(p => ({...p, [id]: !p[id]}));
+  const toggleSeries = (s) => {
+    const all = s.games.every(g => played[g.id]);
+    const u = {};
+    s.games.forEach(g => { u[g.id] = !all; });
+    setPlayed(p => ({...p, ...u}));
+  };
+
+  const playedCount = Object.values(played).filter(Boolean).length;
+  const pct = Math.round((playedCount / TOTAL_GAMES) * 100);
+
+  const saveSub = () => { setEditingSub(false); save("ff-sub", subtitle); };
+
+  const exportImage = useCallback(async () => {
+    setSaving(true);
+    try { await document.fonts.load('700 20px "Cinzel"'); } catch {}
+    try { await document.fonts.load('400 14px "Noto Sans KR"'); } catch {}
+    await new Promise(r => setTimeout(r, 200));
+
+    const S=2, W=1500, padTop=130, padBot=55, padX=36, colGap=28;
+    const colW=(W-padX*2-colGap*3)/4;
+    const logoH=50, itemH=27, secGap=18, logoPB=6;
+
+    const colHs = COLS.map(c => {
+      const ss = SERIES.filter(s => s.col === c);
+      return ss.reduce((h,s) => h + logoH + logoPB + s.games.length * itemH + secGap, 0);
+    });
+    const H = padTop + Math.max(...colHs) + padBot;
+
+    const cv = document.createElement("canvas");
+    cv.width = W*S; cv.height = H*S;
+    const cx = cv.getContext("2d");
+    cx.scale(S,S);
+
+    cx.fillStyle = "#fdf6ec"; cx.fillRect(0,0,W,H);
+
+    cx.save();
+    cx.strokeStyle = "rgba(180,160,130,0.06)"; cx.lineWidth = 0.5;
+    for(let x=0;x<W;x+=30){cx.beginPath();cx.moveTo(x,0);cx.lineTo(x,H);cx.stroke();}
+    for(let y=0;y<H;y+=30){cx.beginPath();cx.moveTo(0,y);cx.lineTo(W,y);cx.stroke();}
+    cx.restore();
+
+    cx.textAlign="center";
+    cx.fillStyle="#b03030"; cx.font='900 38px "Cinzel", serif';
+    cx.fillText("Final Fantasy 진도 체크판", W/2, 50);
+    cx.fillStyle="#8a6040"; cx.font='400 14px "Noto Sans KR", sans-serif';
+    cx.fillText("~ "+subtitle+" ~", W/2, 76);
+
+    const bW=280,bH=12,bX=(W-bW)/2,bY=92;
+    cx.fillStyle="#e8dcc8"; cx.beginPath(); cx.roundRect(bX,bY,bW,bH,6); cx.fill();
+    if(playedCount>0){cx.fillStyle="#b03030";cx.beginPath();cx.roundRect(bX,bY,Math.max((playedCount/TOTAL_GAMES)*bW,8),bH,6);cx.fill();}
+    cx.fillStyle="#6a4a30"; cx.font='500 11px "Noto Sans KR", sans-serif';
+    cx.fillText(playedCount+" / "+TOTAL_GAMES+" ("+pct+"%)", W/2, bY+bH+16);
+
+    cx.strokeStyle="rgba(160,140,110,0.18)"; cx.lineWidth=1;
+    for(let i=1;i<4;i++){const lx=padX+i*(colW+colGap)-colGap/2;cx.beginPath();cx.moveTo(lx,padTop-8);cx.lineTo(lx,H-44);cx.stroke();}
+
+    cx.textAlign="left";
+    COLS.forEach(c => {
+      const ss = SERIES.filter(s => s.col === c);
+      const x = padX + c*(colW+colGap);
+      let y = padTop;
+
+      ss.forEach(s => {
+        const clr = LC[s.id]||"#666";
+        cx.fillStyle=clr+"14"; cx.beginPath(); cx.roundRect(x,y,colW,logoH,6); cx.fill();
+        cx.strokeStyle=clr+"35"; cx.lineWidth=1.2; cx.beginPath(); cx.roundRect(x,y,colW,logoH,6); cx.stroke();
+
+        if(logoLoaded[s.id]) {
+          // 로고 이미지 그리기
+          const img = logoLoaded[s.id];
+          const maxW = colW - 16, maxH = logoH - 10;
+          const ratio = Math.min(maxW / img.naturalWidth, maxH / img.naturalHeight);
+          const drawW = img.naturalWidth * ratio, drawH = img.naturalHeight * ratio;
+          cx.drawImage(img, x + (colW - drawW) / 2, y + (logoH - drawH) / 2, drawW, drawH);
+        } else {
+          cx.textAlign="center"; cx.fillStyle=clr; cx.font='700 12.5px "Cinzel", serif';
+          cx.fillText(s.title, x+colW/2, y+22);
+          cx.fillStyle=clr+"50"; cx.font='400 8px "Noto Sans KR", sans-serif';
+          cx.fillText("LOGO", x+colW/2, y+40);
+        }
+        cx.textAlign="left";
+        y += logoH+logoPB;
+
+        s.games.forEach(g => {
+          const ck=!!played[g.id]; const cbX=x+6,cbY=y+4,cbS=13;
+          if(ck){
+            cx.fillStyle="#b03030"; cx.beginPath(); cx.roundRect(cbX,cbY,cbS,cbS,2.5); cx.fill();
+            cx.strokeStyle="#fff"; cx.lineWidth=1.8; cx.beginPath();
+            cx.moveTo(cbX+2.5,cbY+6.5); cx.lineTo(cbX+5.5,cbY+9.5); cx.lineTo(cbX+10.5,cbY+3.5); cx.stroke();
+          } else {
+            cx.strokeStyle="#b09070"; cx.lineWidth=1.2; cx.beginPath(); cx.roundRect(cbX,cbY,cbS,cbS,2.5); cx.stroke();
+          }
+          cx.fillStyle=ck?"#3a2a1a":"#8a7a6a";
+          cx.font=(ck?"500":"400")+' 11.5px "Noto Sans KR", sans-serif';
+          cx.fillText(g.name, cbX+cbS+8, cbY+11);
+          y+=itemH;
+        });
+        y+=secGap;
+      });
+    });
+
+    cx.textAlign="center"; cx.fillStyle="#b09070"; cx.font='400 10px "Noto Sans KR", sans-serif';
+    cx.fillText("주관적인 기준으로 선정하였습니다.", W/2, H-30);
+    cx.fillText("업데이트 날짜: "+new Date().toISOString().split("T")[0], W/2, H-14);
+
+    const a=document.createElement("a");
+    a.download="ff_progress_"+new Date().toISOString().split("T")[0]+".png";
+    a.href=cv.toDataURL("image/png"); a.click();
+    setSaving(false);
+  }, [played, subtitle, playedCount, pct, logoLoaded]);
+
+  return (
+    <div className="root">
+      <div className="hdr">
+        <h1 className="ttl">Final Fantasy 진도 체크판</h1>
+        {editingSub ? (
+          <div className="sub">~ <input autoFocus value={subtitle} onChange={e=>setSubtitle(e.target.value)} onBlur={saveSub} onKeyDown={e=>e.key==="Enter"&&saveSub()} /> ~</div>
+        ) : (
+          <div className="sub" onClick={()=>setEditingSub(true)}>~ {subtitle} ~</div>
+        )}
+        <div className="pbar-wrap">
+          <div className="pbar"><div className="pfill" style={{width:pct+"%"}} /></div>
+          <div className="ptxt">{playedCount} / {TOTAL_GAMES} ({pct}%)</div>
+        </div>
+        <div className="acts">
+          <button className="btn-export" onClick={exportImage} disabled={saving}>{saving?"내보내는 중...":"이미지 내보내기"}</button>
+          <button className="btn btn-d" onClick={()=>setPlayed({})}>초기화</button>
+        </div>
+      </div>
+      <div className="grid">
+        {COLS.map(c=>(
+          <div key={c}>
+            {SERIES.filter(s=>s.col===c).map(s=>{
+              const allDone=s.games.every(g=>played[g.id]);
+              const doneN=s.games.filter(g=>played[g.id]).length;
+              const clr=LC[s.id]||"#666";
+              return (
+                <div key={s.id} className={"ser"+(allDone?" done":"")}>
+                  <div className="logo" style={{background:clr+"12"}} onClick={()=>toggleSeries(s)} title="시리즈 전체 토글">
+                    <div className="sc">{allDone?"✓ ALL":doneN>0?doneN+"/"+s.games.length:""}</div>
+                    {logoLoaded[s.id] ? (
+                      <img className="logo-img" src={LOGO_DIR+s.id+LOGO_EXT} alt={s.title} draggable="false" />
+                    ) : (
+                      <React.Fragment>
+                        <div className="lt" style={{color:clr}}>{s.title}</div>
+                        <div className="lp">LOGO</div>
+                      </React.Fragment>
+                    )}
+                  </div>
+                  <div className="gl">
+                    {s.games.map(g=>{
+                      const on=!!played[g.id];
+                      return (
+                        <div key={g.id} className="gi" onClick={()=>toggle(g.id)}>
+                          <div className={"cb"+(on?" on":"")}>
+                            {on&&<svg viewBox="0 0 10 10" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1.5 5.5 L4 8 L8.5 2" /></svg>}
+                          </div>
+                          <span className={"gn"+(on?" on":"")}>{g.name}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+      <div className="acts" style={{padding:"12px 16px 0"}}>
+        <button className="btn-export" onClick={exportImage} disabled={saving}>{saving?"내보내는 중...":"이미지 내보내기"}</button>
+      </div>
+      <div className="ft">주관적인 기준으로 선정하였습니다 · 자막 클릭 시 편집 가능 · 체크 상태 자동 저장</div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("app")).render(<App />);
+</script>
+</body>
+</html><script type="text/babel">
 const { useState, useEffect, useCallback } = React;
 
 const SERIES = [
