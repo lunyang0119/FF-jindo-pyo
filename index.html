@@ -196,7 +196,7 @@ function save(k,v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {
 function App() {
   const [played, setPlayed] = useState(() => load("ff-played", {}));
   const [saving, setSaving] = useState(false);
-  const [subtitle, setSubtitle] = useState(() => load("ff-sub", "도장을 찍을 때마다 스퀘어에닉스를 용서하지 않는 중"));
+  const [subtitle, setSubtitle] = useState(() => load("ff-sub", "마지막헛것어디까지해봤니"));
   const [editingSub, setEditingSub] = useState(false);
   const [logoLoaded, setLogoLoaded] = useState({});
   const [twitterId, setTwitterId] = useState(() => load("ff-twt", ""));
