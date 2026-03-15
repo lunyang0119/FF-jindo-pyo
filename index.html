@@ -62,7 +62,7 @@ body { background: #f5efe4; }
 }
 .ser { margin-bottom: 6px; }
 .logo {
-  border-radius: 7px; padding: 8px 10px 6px; text-align: center;
+  border-radius: 7px; padding: 12px 10px 10px; text-align: center;
   cursor: pointer; transition: all 0.15s; position: relative;
   border: 1.5px solid transparent;
 }
@@ -70,10 +70,10 @@ body { background: #f5efe4; }
 .logo:active { transform: translateY(0); }
 .lt {
   font-family: 'Cinzel', serif; font-weight: 700;
-  font-size: 0.78rem; letter-spacing: 0.8px;
+  font-size: 0.85rem; letter-spacing: 0.8px;
 }
-.lp { font-size: 0.55rem; opacity: 0.35; margin-top: 1px; letter-spacing: 2px; }
-.logo-img { max-width: 90%; max-height: 36px; object-fit: contain; margin-top: 2px; display: block; margin-left: auto; margin-right: auto; }
+.lp { font-size: 0.55rem; opacity: 0.35; margin-top: 2px; letter-spacing: 2px; }
+.logo-img { max-width: 90%; max-height: 48px; object-fit: contain; margin-top: 2px; display: block; margin-left: auto; margin-right: auto; }
 .sc {
   position: absolute; top: 3px; right: 5px;
   font-size: 0.6rem; opacity: 0.5; font-weight: 500;
@@ -223,9 +223,9 @@ function App() {
     try { await document.fonts.load('400 14px "Noto Sans KR"'); } catch {}
     await new Promise(r => setTimeout(r, 200));
 
-    const S=2, W=1500, padTop=130, padBot=55, padX=36, colGap=28;
+    const S=2, W=1200, padTop=140, padBot=55, padX=32, colGap=24;
     const colW=(W-padX*2-colGap*3)/4;
-    const logoH=50, itemH=27, secGap=18, logoPB=6;
+    const logoH=68, itemH=28, secGap=18, logoPB=6;
 
     const colHs = COLS.map(c => {
       const ss = SERIES.filter(s => s.col === c);
@@ -247,16 +247,16 @@ function App() {
     cx.restore();
 
     cx.textAlign="center";
-    cx.fillStyle="#b03030"; cx.font='900 38px "Cinzel", serif';
-    cx.fillText("Final Fantasy 진도 체크판", W/2, 50);
-    cx.fillStyle="#8a6040"; cx.font='400 14px "Noto Sans KR", sans-serif';
-    cx.fillText("~ "+subtitle+" ~", W/2, 76);
+    cx.fillStyle="#b03030"; cx.font='900 42px "Cinzel", serif';
+    cx.fillText("Final Fantasy 진도 체크판", W/2, 52);
+    cx.fillStyle="#8a6040"; cx.font='400 16px "Noto Sans KR", sans-serif';
+    cx.fillText("~ "+subtitle+" ~", W/2, 80);
 
-    const bW=280,bH=12,bX=(W-bW)/2,bY=92;
-    cx.fillStyle="#e8dcc8"; cx.beginPath(); cx.roundRect(bX,bY,bW,bH,6); cx.fill();
-    if(playedCount>0){cx.fillStyle="#b03030";cx.beginPath();cx.roundRect(bX,bY,Math.max((playedCount/TOTAL_GAMES)*bW,8),bH,6);cx.fill();}
-    cx.fillStyle="#6a4a30"; cx.font='500 11px "Noto Sans KR", sans-serif';
-    cx.fillText(playedCount+" / "+TOTAL_GAMES+" ("+pct+"%)", W/2, bY+bH+16);
+    const bW=260,bH=14,bX=(W-bW)/2,bY=96;
+    cx.fillStyle="#e8dcc8"; cx.beginPath(); cx.roundRect(bX,bY,bW,bH,7); cx.fill();
+    if(playedCount>0){cx.fillStyle="#b03030";cx.beginPath();cx.roundRect(bX,bY,Math.max((playedCount/TOTAL_GAMES)*bW,8),bH,7);cx.fill();}
+    cx.fillStyle="#6a4a30"; cx.font='500 13px "Noto Sans KR", sans-serif';
+    cx.fillText(playedCount+" / "+TOTAL_GAMES+" ("+pct+"%)", W/2, bY+bH+18);
 
     cx.strokeStyle="rgba(160,140,110,0.18)"; cx.lineWidth=1;
     for(let i=1;i<4;i++){const lx=padX+i*(colW+colGap)-colGap/2;cx.beginPath();cx.moveTo(lx,padTop-8);cx.lineTo(lx,H-44);cx.stroke();}
@@ -280,33 +280,33 @@ function App() {
           const drawW = img.naturalWidth * ratio, drawH = img.naturalHeight * ratio;
           cx.drawImage(img, x + (colW - drawW) / 2, y + (logoH - drawH) / 2, drawW, drawH);
         } else {
-          cx.textAlign="center"; cx.fillStyle=clr; cx.font='700 12.5px "Cinzel", serif';
-          cx.fillText(s.title, x+colW/2, y+22);
-          cx.fillStyle=clr+"50"; cx.font='400 8px "Noto Sans KR", sans-serif';
-          cx.fillText("LOGO", x+colW/2, y+40);
+          cx.textAlign="center"; cx.fillStyle=clr; cx.font='700 14px "Cinzel", serif';
+          cx.fillText(s.title, x+colW/2, y+30);
+          cx.fillStyle=clr+"50"; cx.font='400 9px "Noto Sans KR", sans-serif';
+          cx.fillText("LOGO", x+colW/2, y+50);
         }
         cx.textAlign="left";
         y += logoH+logoPB;
 
         s.games.forEach(g => {
-          const ck=!!played[g.id]; const cbX=x+6,cbY=y+4,cbS=13;
+          const ck=!!played[g.id]; const cbX=x+6,cbY=y+4,cbS=14;
           if(ck){
             cx.fillStyle="#b03030"; cx.beginPath(); cx.roundRect(cbX,cbY,cbS,cbS,2.5); cx.fill();
             cx.strokeStyle="#fff"; cx.lineWidth=1.8; cx.beginPath();
-            cx.moveTo(cbX+2.5,cbY+6.5); cx.lineTo(cbX+5.5,cbY+9.5); cx.lineTo(cbX+10.5,cbY+3.5); cx.stroke();
+            cx.moveTo(cbX+3,cbY+7); cx.lineTo(cbX+6,cbY+10); cx.lineTo(cbX+11,cbY+4); cx.stroke();
           } else {
             cx.strokeStyle="#b09070"; cx.lineWidth=1.2; cx.beginPath(); cx.roundRect(cbX,cbY,cbS,cbS,2.5); cx.stroke();
           }
           cx.fillStyle=ck?"#3a2a1a":"#8a7a6a";
-          cx.font=(ck?"500":"400")+' 11.5px "Noto Sans KR", sans-serif';
-          cx.fillText(g.name, cbX+cbS+8, cbY+11);
+          cx.font=(ck?"500":"400")+' 13px "Noto Sans KR", sans-serif';
+          cx.fillText(g.name, cbX+cbS+8, cbY+12);
           y+=itemH;
         });
         y+=secGap;
       });
     });
 
-    cx.textAlign="center"; cx.fillStyle="#b09070"; cx.font='400 10px "Noto Sans KR", sans-serif';
+    cx.textAlign="center"; cx.fillStyle="#b09070"; cx.font='400 11px "Noto Sans KR", sans-serif';
     cx.fillText("주관적인 기준으로 선정하였습니다.", W/2, H-30);
     cx.fillText("업데이트 날짜: "+new Date().toISOString().split("T")[0], W/2, H-14);
 
