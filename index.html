@@ -5,195 +5,1032 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Final Fantasy 진도 체크판</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: #f5efe4; }
-.root { font-family: 'Noto Sans KR', sans-serif; background: #fdf6ec; min-height: 100vh; color: #3a2a1a; }
-.hdr {
-  text-align: center; padding: 28px 16px 18px;
-  border-bottom: 2px solid rgba(180,150,120,0.18);
-  background: linear-gradient(180deg, #fef9f2 0%, #fdf6ec 100%);
-  position: sticky; top: 0; z-index: 20;
-  backdrop-filter: blur(8px);
-}
-.ttl {
-  font-family: 'Cinzel', serif; font-weight: 900; font-size: 1.9rem;
-  color: #b03030; letter-spacing: 2px;
-}
-.sub { color: #8a6040; font-size: 0.82rem; margin-top: 5px; cursor: pointer; }
-.sub:hover { text-decoration: underline dotted #b09070; }
-.twt-wrap { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 8px; }
-.twt-label { font-size: 0.75rem; color: #b09070; }
-.twt-input {
-  font-family: 'Noto Sans KR', sans-serif; font-size: 0.78rem; color: #6a4a30;
-  background: #fef8f0; border: 1px solid #d0c0a0; border-radius: 4px;
-  padding: 3px 8px; width: 180px; outline: none;
-}
-.twt-input:focus { border-color: #b03030; }
-.sub input {
-  font-family: 'Noto Sans KR', sans-serif; font-size: 0.82rem; color: #8a6040;
-  background: #fef3e0; border: 1px solid #c0a070; border-radius: 4px;
-  padding: 2px 8px; width: 340px; text-align: center; outline: none;
-}
-.pbar-wrap { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 12px; }
-.pbar { width: 220px; height: 10px; background: #e8dcc8; border-radius: 5px; overflow: hidden; }
-.pfill { height: 100%; background: linear-gradient(90deg, #c03030, #e04848); border-radius: 5px; transition: width 0.3s; }
-.ptxt { font-size: 0.75rem; color: #8a6a4a; font-weight: 500; min-width: 80px; }
-.acts { display: flex; gap: 8px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
-.btn {
-  font-family: 'Noto Sans KR', sans-serif; font-size: 0.75rem; font-weight: 500;
-  padding: 5px 16px; border-radius: 5px; cursor: pointer; transition: all 0.15s;
-  border: 1.5px solid #c0a070; background: #fef8f0; color: #6a4a30;
-}
-.btn:hover { background: #f0e6d4; }
-.btn-export {
-  font-family: 'Noto Sans KR', sans-serif; font-size: 1rem; font-weight: 700;
-  padding: 12px 36px; border-radius: 8px; cursor: pointer; transition: all 0.15s;
-  background: #b03030; color: #fff; border: 2px solid #b03030;
-}
-.btn-export:hover { background: #922828; }
-.btn-export:disabled { opacity: 0.6; cursor: wait; }
-.btn-p { background: #b03030; color: #fff; border-color: #b03030; }
-.btn-p:hover { background: #922828; }
-.btn-p:disabled { opacity: 0.6; cursor: wait; }
-.btn-d { border-color: #ddd; color: #aaa; }
-.btn-d:hover { background: #fee; border-color: #d88; color: #a44; }
-.grid {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
-  padding: 20px 16px 36px; max-width: 1480px; margin: 0 auto;
-}
-@media (max-width: 1100px) { .grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 600px) {
-  .grid { grid-template-columns: 1fr; }
-  .ttl { font-size: 1.3rem; }
-}
-.ser { margin-bottom: 6px; }
-.logo {
-  border-radius: 7px; padding: 12px 10px 10px; text-align: center;
-  cursor: pointer; transition: all 0.15s; position: relative;
-  border: 1.5px solid transparent;
-}
-.logo:hover { filter: brightness(1.06); border-color: rgba(0,0,0,0.06); transform: translateY(-1px); }
-.logo:active { transform: translateY(0); }
-.lt {
-  font-family: 'Cinzel', serif; font-weight: 700;
-  font-size: 0.85rem; letter-spacing: 0.8px;
-}
-.lp { font-size: 0.55rem; opacity: 0.35; margin-top: 2px; letter-spacing: 2px; }
-.logo-img { max-width: 90%; max-height: 48px; object-fit: contain; margin-top: 2px; display: block; margin-left: auto; margin-right: auto; }
-.sc {
-  position: absolute; top: 3px; right: 5px;
-  font-size: 0.6rem; opacity: 0.5; font-weight: 500;
-}
-.gl { padding: 3px 0 0 2px; }
-.gi {
-  display: flex; align-items: center; gap: 7px;
-  padding: 2.5px 5px; border-radius: 4px; cursor: pointer;
-  transition: background 0.1s; user-select: none;
-}
-.gi:hover { background: rgba(180,150,120,0.08); }
-.cb {
-  width: 15px; height: 15px; border-radius: 3px; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.12s; border: 1.5px solid #c8b8a8; background: #fef8f0;
-}
-.cb.on { background: #b03030; border-color: #b03030; }
-.cb svg { width: 9px; height: 9px; }
-.gn { font-size: 0.72rem; color: #b0a090; transition: all 0.12s; line-height: 1.3; }
-.gn.on { font-size: 0.82rem; color: #2a1a0a; font-weight: 700; }
-.done .logo { box-shadow: 0 0 0 2px #b03030, 0 0 10px rgba(176,48,48,0.12); }
-.ft {
-  text-align: center; padding: 14px; font-size: 0.68rem; color: #b09070;
-  border-top: 1px solid rgba(180,150,120,0.12);
-}
+  :root {
+    /* 양피지 저널 — 기본 테마 */
+    --bg: #efe6d2;
+    --paper: #f7efdd;
+    --paper-2: #fbf5e6;
+    --ink: #2a1d10;
+    --ink-soft: #5a4a36;
+    --ink-mute: #907a5a;
+    --line: #c9b890;
+    --line-soft: #d9cba8;
+    --accent: #8a1c1c;      /* 인장 레드 */
+    --accent-2: #c2872a;    /* 금박 */
+    --accent-soft: #b24848;
+    --stamp: #8a1c1c;
+    --shadow: 0 1px 0 rgba(90,70,40,0.06), 0 8px 24px -12px rgba(90,70,40,0.2);
+  }
+  html[data-theme="midnight"] {
+    --bg: #0e1018;
+    --paper: #161925;
+    --paper-2: #1d2130;
+    --ink: #e8e3d4;
+    --ink-soft: #b5ac96;
+    --ink-mute: #6e6857;
+    --line: #2c3045;
+    --line-soft: #23273a;
+    --accent: #d4a944;
+    --accent-2: #7ba6d9;
+    --accent-soft: #e6c06a;
+    --stamp: #d4a944;
+    --shadow: 0 1px 0 rgba(0,0,0,0.3), 0 12px 32px -16px rgba(0,0,0,0.6);
+  }
+  html[data-theme="minimal"] {
+    --bg: #f5f5f3;
+    --paper: #ffffff;
+    --paper-2: #fafaf8;
+    --ink: #1a1a1a;
+    --ink-soft: #4a4a4a;
+    --ink-mute: #8a8a8a;
+    --line: #e4e4e0;
+    --line-soft: #eeeeea;
+    --accent: #1a1a1a;
+    --accent-2: #8a1c1c;
+    --accent-soft: #3a3a3a;
+    --stamp: #1a1a1a;
+    --shadow: 0 1px 0 rgba(0,0,0,0.02), 0 4px 12px -6px rgba(0,0,0,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    color: var(--ink);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "kern", "liga";
+  }
+
+  /* 종이 질감 — 테마별 교체 */
+  .page-bg {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(138,28,28,0.05), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 0% 100%, rgba(194,135,42,0.05), transparent 70%);
+  }
+  html[data-theme="midnight"] .page-bg {
+    background-image:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(212,169,68,0.06), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 100% 100%, rgba(123,166,217,0.05), transparent 70%);
+  }
+  html[data-theme="minimal"] .page-bg { background-image: none; }
+
+  .wrap { position: relative; z-index: 1; max-width: 1480px; margin: 0 auto; }
+
+  /* ==== 헤더 ==== */
+  .hdr {
+    padding: 44px 32px 28px;
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, var(--paper-2), var(--paper));
+    position: relative;
+  }
+  .hdr-inner { display: grid; grid-template-columns: 1fr auto 1fr; gap: 24px; align-items: center; }
+  .hdr-left, .hdr-right { min-width: 0; }
+  .hdr-right { text-align: right; }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px; letter-spacing: 0.24em; text-transform: uppercase;
+    color: var(--ink-mute);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .hdr-right .eyebrow { justify-content: flex-end; }
+  .eyebrow .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); display: inline-block; }
+
+  .ttl {
+    font-family: 'Cinzel', serif; font-weight: 900;
+    font-size: clamp(28px, 4vw, 44px);
+    letter-spacing: 0.08em;
+    color: var(--ink);
+    line-height: 1.05;
+    text-align: center;
+  }
+  .ttl .amp { color: var(--accent); font-weight: 400; font-style: italic; font-family: 'Cormorant Garamond', serif; }
+
+  .sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--ink-soft);
+    text-align: center;
+    margin-top: 8px;
+    cursor: text;
+  }
+  .sub .orn { color: var(--accent); opacity: 0.7; margin: 0 10px; letter-spacing: 4px; }
+  .sub input {
+    font-family: inherit; font-style: italic; font-size: 18px; color: var(--ink);
+    background: transparent; border: none; border-bottom: 1px dashed var(--line);
+    padding: 2px 8px; width: min(420px, 70vw); text-align: center; outline: none;
+  }
+  .sub input:focus { border-bottom-color: var(--accent); }
+
+  /* 진행 카드 — 헤더 메인 */
+  .progress-card {
+    margin-top: 28px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 22px 28px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 32px;
+    align-items: center;
+    box-shadow: var(--shadow);
+    position: relative;
+  }
+  .progress-card::before, .progress-card::after {
+    content: ""; position: absolute; width: 10px; height: 10px;
+    border: 1px solid var(--ink-mute); opacity: 0.4;
+  }
+  .progress-card::before { top: 6px; left: 6px; border-right: none; border-bottom: none; }
+  .progress-card::after  { bottom: 6px; right: 6px; border-left: none; border-top: none; }
+
+  .stat-big {
+    display: flex; align-items: baseline; gap: 4px;
+    font-family: 'Cinzel', serif; font-weight: 700;
+    color: var(--ink);
+  }
+  .stat-big .n { font-size: 56px; line-height: 1; letter-spacing: -0.02em; }
+  .stat-big .sep { font-size: 32px; color: var(--ink-mute); margin: 0 4px; }
+  .stat-big .d { font-size: 28px; color: var(--ink-soft); }
+  .stat-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-mute); margin-top: 4px; }
+
+  .pbar-col { min-width: 0; }
+  .pbar-top {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink-mute); letter-spacing: 0.1em; margin-bottom: 8px;
+  }
+  .pbar-top .pct { font-family: 'Cinzel', serif; font-weight: 700; font-size: 22px; color: var(--accent); letter-spacing: 0; }
+  .pbar {
+    height: 8px; background: var(--line-soft); border-radius: 0;
+    overflow: hidden; position: relative;
+    border: 1px solid var(--line);
+  }
+  .pfill {
+    height: 100%;
+    background:
+      repeating-linear-gradient(135deg, var(--accent) 0 6px, var(--accent-soft) 6px 12px);
+    transition: width 0.5s cubic-bezier(.2,.7,.2,1);
+  }
+  .pbar-ticks {
+    display: flex; justify-content: space-between;
+    margin-top: 6px; font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: var(--ink-mute); letter-spacing: 0.1em;
+  }
+
+  /* 씰 (완성 퍼센트 위의 작은 배지) */
+  .seal {
+    width: 92px; height: 92px; border-radius: 50%;
+    background: var(--paper);
+    border: 2px solid var(--accent);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    position: relative;
+    box-shadow: inset 0 0 0 4px var(--paper), inset 0 0 0 5px var(--accent);
+  }
+  .seal-pct {
+    font-family: 'Cinzel', serif; font-weight: 900; font-size: 22px;
+    color: var(--accent); letter-spacing: 0;
+  }
+  .seal-lbl {
+    font-family: 'JetBrains Mono', monospace; font-size: 7.5px;
+    color: var(--accent); letter-spacing: 0.22em; text-transform: uppercase;
+    margin-top: 1px;
+  }
+  .seal-star {
+    position: absolute; top: -6px; left: 50%; transform: translateX(-50%);
+    width: 10px; height: 10px; background: var(--accent);
+    clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  }
+
+  /* 액션 바 */
+  .actions {
+    display: flex; gap: 10px; justify-content: center; align-items: center;
+    margin-top: 20px; flex-wrap: wrap;
+  }
+  .btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    padding: 11px 22px; cursor: pointer;
+    border: 1px solid var(--line); background: var(--paper-2); color: var(--ink-soft);
+    border-radius: 1px;
+    transition: all 0.15s ease;
+  }
+  .btn:hover { background: var(--paper); border-color: var(--ink-mute); color: var(--ink); }
+  .btn-primary {
+    background: var(--ink); border-color: var(--ink); color: var(--paper);
+    font-weight: 700;
+  }
+  .btn-primary:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn-primary:disabled { opacity: 0.5; cursor: wait; }
+  .btn-danger:hover { background: var(--paper); border-color: var(--accent); color: var(--accent); }
+
+  .twt {
+    display: inline-flex; align-items: center; gap: 0;
+    border: 1px solid var(--line); background: var(--paper-2);
+    border-radius: 1px; overflow: hidden;
+  }
+  .twt-at {
+    padding: 0 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink-mute); border-right: 1px solid var(--line);
+    background: var(--paper); align-self: stretch; display: flex; align-items: center;
+  }
+  .twt input {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink);
+    background: transparent; border: none; padding: 10px 12px; width: 180px; outline: none;
+    letter-spacing: 0.05em;
+  }
+
+  /* ==== 그리드 ==== */
+  .grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px;
+    padding: 32px 32px 60px;
+    position: relative;
+  }
+  /* 칼럼 구분선 */
+  .grid::before {
+    content: ""; position: absolute;
+    top: 32px; bottom: 60px; left: 25%; right: 25%;
+    background-image:
+      linear-gradient(var(--line-soft), var(--line-soft)),
+      linear-gradient(var(--line-soft), var(--line-soft));
+    background-size: 1px 100%;
+    background-position: 0 0, 100% 0;
+    background-repeat: no-repeat;
+    pointer-events: none;
+  }
+
+  @media (max-width: 1100px) {
+    .grid { grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 24px 20px 40px; }
+    .grid::before { left: 50%; right: auto; width: 1px; background: var(--line-soft); }
+    .hdr-inner { grid-template-columns: 1fr; }
+    .hdr-left, .hdr-right { text-align: center; }
+    .hdr-right .eyebrow { justify-content: center; }
+    .progress-card { grid-template-columns: 1fr; gap: 18px; text-align: center; }
+    .stat-big, .progress-card .seal { justify-self: center; }
+  }
+  @media (max-width: 600px) {
+    .grid { grid-template-columns: 1fr; }
+    .grid::before { display: none; }
+    .hdr { padding: 28px 16px 20px; }
+    .progress-card { padding: 18px 18px; }
+    .stat-big .n { font-size: 44px; }
+  }
+
+  /* ==== 시리즈 카드 ==== */
+  .ser {
+    margin-bottom: 26px;
+    position: relative;
+  }
+
+  /* 시리즈 헤더: 번호 + 타이틀 + 진척 게이지 */
+  .ser-head {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 14px;
+    align-items: center;
+    padding: 10px 4px 12px;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid var(--line);
+    transition: all 0.15s;
+  }
+  .ser-head:hover { border-bottom-color: var(--accent); }
+
+  .ser-num {
+    font-family: 'Cinzel', serif; font-weight: 900;
+    font-size: 44px; line-height: 0.9;
+    color: var(--ser-c, var(--ink));
+    letter-spacing: 0.02em;
+    min-width: 56px; text-align: center;
+    transition: all 0.2s;
+    font-feature-settings: "lnum";
+  }
+  .ser-num.small { font-size: 22px; letter-spacing: 0.1em; }
+  .ser-meta { min-width: 0; }
+  .ser-title {
+    font-family: 'Cinzel', serif; font-weight: 600;
+    font-size: 11px; letter-spacing: 0.2em;
+    color: var(--ink-soft);
+    line-height: 1.2;
+  }
+  .ser-sub {
+    display: flex; align-items: baseline; gap: 8px;
+    margin-top: 3px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px; letter-spacing: 0.15em;
+    color: var(--ink-mute); text-transform: uppercase;
+  }
+  .ser-year { color: var(--ser-c, var(--ink-mute)); font-weight: 500; }
+  .ser-count {
+    margin-left: auto;
+    font-family: 'Cinzel', serif; font-weight: 700;
+    font-size: 12px;
+    color: var(--ink-mute);
+    letter-spacing: 0;
+  }
+  .ser-count b { color: var(--ser-c, var(--ink)); font-weight: 900; font-size: 14px; }
+
+  /* 미니 진척 라인 */
+  .ser-gauge {
+    height: 2px; background: var(--line-soft);
+    margin-top: 8px;
+    position: relative;
+  }
+  .ser-gauge-fill {
+    position: absolute; top: 0; left: 0; height: 100%;
+    background: var(--ser-c, var(--accent));
+    transition: width 0.4s cubic-bezier(.2,.7,.2,1);
+  }
+
+  /* 완료 상태 */
+  .ser.done .ser-num {
+    color: var(--accent);
+    text-shadow: 0 0 1px var(--accent);
+  }
+  .ser.done .ser-head {
+    border-bottom-color: var(--accent);
+  }
+  .ser-seal-mark {
+    display: none;
+    font-family: 'Cinzel', serif; font-weight: 900;
+    color: var(--accent); font-size: 11px;
+    letter-spacing: 0.2em;
+    padding: 2px 8px;
+    border: 1px solid var(--accent);
+    margin-left: 8px;
+  }
+  .ser.done .ser-seal-mark { display: inline-block; }
+
+  /* ==== 로고 이미지 모드 (logos/xxx.webp 있을 때) ==== */
+  .logo-img {
+    max-width: 100%; max-height: 48px;
+    object-fit: contain;
+    display: block;
+    filter: var(--logo-filter, none);
+  }
+  html[data-theme="midnight"] .logo-img { filter: brightness(0) invert(1) opacity(0.9); }
+
+  /* ==== 게임 리스트 ==== */
+  .games { padding: 10px 4px 0 4px; }
+  .gi {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 7px 6px;
+    border-radius: 1px;
+    cursor: pointer;
+    transition: all 0.12s;
+    user-select: none;
+    position: relative;
+  }
+  .gi:hover { background: var(--paper-2); }
+  .gi:hover .gi-num { color: var(--ser-c, var(--ink-soft)); }
+
+  .gi-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px; font-weight: 500;
+    color: var(--ink-mute);
+    min-width: 22px; padding-top: 4px;
+    letter-spacing: 0.08em;
+    transition: color 0.12s;
+  }
+
+  .cb {
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--line); background: var(--paper);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    margin-top: 3px;
+    position: relative;
+  }
+  .cb::after {
+    content: ""; position: absolute; inset: -4px;
+    border: 1px dashed transparent;
+    transition: border-color 0.15s;
+  }
+  .gi:hover .cb { border-color: var(--ser-c, var(--ink-mute)); }
+  .cb.on {
+    background: var(--ser-c, var(--accent));
+    border-color: var(--ser-c, var(--accent));
+  }
+  .cb.on::after { border-color: var(--ser-c, var(--accent)); opacity: 0.3; }
+  .cb svg { width: 10px; height: 10px; stroke: #fff; }
+
+  .gn {
+    font-size: 13px; font-weight: 400; color: var(--ink-mute);
+    line-height: 1.35;
+    transition: all 0.12s;
+    word-break: keep-all;
+    padding-top: 1px;
+  }
+  .gi:hover .gn { color: var(--ink-soft); }
+  .gn.on { color: var(--ink); font-weight: 500; }
+  .gn.on::before {
+    content: ""; display: inline-block; width: 3px; height: 3px;
+    background: var(--ser-c, var(--accent)); border-radius: 50%;
+    margin-right: 6px; vertical-align: middle; margin-bottom: 2px;
+  }
+
+  /* ==== 푸터 ==== */
+  .ft {
+    text-align: center;
+    padding: 28px 16px 40px;
+    border-top: 1px solid var(--line);
+    background: var(--paper-2);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--ink-mute);
+    font-size: 14px;
+    letter-spacing: 0.05em;
+  }
+  .ft .orn { color: var(--accent); margin: 0 10px; opacity: 0.5; }
+
+  /* Tweaks 버튼 트리거는 호스트에서 처리 */
 </style>
 </head>
 <body>
+<div class="page-bg"></div>
 <div id="app"></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.9/babel.min.js"></script>
-<script type="text/babel">
-const { useState, useEffect, useCallback } = React;
-
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel">// FF 시리즈 데이터 + 메타 (색상, 로만 숫자, 연도)
 const SERIES = [
-  { id:"ff1",title:"FINAL FANTASY I",col:0,games:[{id:"ff1_main",name:"파이널 판타지 I"}] },
-  { id:"ff2",title:"FINAL FANTASY II",col:0,games:[{id:"ff2_main",name:"파이널 판타지 II"},{id:"ff2_soul",name:"소울 오브 리버스"}] },
-  { id:"ff3",title:"FINAL FANTASY III",col:0,games:[{id:"ff3_main",name:"파이널 판타지 III"}] },
-  { id:"ff4",title:"FINAL FANTASY IV",col:0,games:[{id:"ff4_main",name:"파이널 판타지 IV"},{id:"ff4_tay",name:"The After Years 달의 귀환"}] },
-  { id:"ff5",title:"FINAL FANTASY V",col:0,games:[{id:"ff5_main",name:"파이널 판타지 V"}] },
-  { id:"ff6",title:"FINAL FANTASY VI",col:0,games:[{id:"ff6_main",name:"파이널 판타지 VI"}] },
-  { id:"ff7",title:"FINAL FANTASY VII",col:0,games:[
-    {id:"ff7_main",name:"파이널 판타지 VII"},{id:"ff7_ac",name:"어드벤트 칠드런 (컴플리트)"},
-    {id:"ff7_bc",name:"비포 크라이시스"},{id:"ff7_cc",name:"크라이시스 코어 (리유니온)"},
-    {id:"ff7_dc",name:"더지 오브 케르베로스"},{id:"ff7_r",name:"파이널 판타지 VII Remake"},
-    {id:"ff7_ec",name:"에버 크라이시스"},{id:"ff7_rb",name:"파이널 판타지 VII Rebirth"}
+  { id:"ff1", title:"FINAL FANTASY", num:"I", numText:"1", year:1987, col:0, games:[
+    {id:"ff1_main", name:"파이널 판타지 I"}
   ]},
-  { id:"ff8",title:"FINAL FANTASY VIII",col:1,games:[{id:"ff8_main",name:"파이널 판타지 VIII"}] },
-  { id:"ff9",title:"FINAL FANTASY IX",col:1,games:[{id:"ff9_main",name:"파이널 판타지 IX"}] },
-  { id:"ff10",title:"FINAL FANTASY X",col:1,games:[{id:"ff10_main",name:"파이널 판타지 X"},{id:"ff10_2",name:"파이널 판타지 X-2"}] },
-  { id:"ff11",title:"FINAL FANTASY XI",col:1,games:[
-    {id:"ff11_zilart",name:"지라트의 환영"},{id:"ff11_promathia",name:"프로마시아의 주박"},
-    {id:"ff11_aht",name:"아토르간의 보물"},{id:"ff11_altana",name:"알타나의 신병"},
-    {id:"ff11_adoulin",name:"아두린의 마경"},{id:"ff11_rhapsodies",name:"바나딜의 별노래"},
-    {id:"ff11_voracious",name:"식세의 엠브리오"}
+  { id:"ff2", title:"FINAL FANTASY", num:"II", numText:"2", year:1988, col:0, games:[
+    {id:"ff2_main", name:"파이널 판타지 II"},
+    {id:"ff2_soul", name:"소울 오브 리버스"}
   ]},
-  { id:"ff12",title:"FINAL FANTASY XII",col:1,games:[{id:"ff12_main",name:"파이널 판타지 XII"},{id:"ff12_rw",name:"레버넌트 윙"}] },
-  { id:"ff13",title:"FINAL FANTASY XIII",col:1,games:[
-    {id:"ff13_main",name:"파이널 판타지 XIII"},{id:"ff13_2",name:"파이널 판타지 XIII-2"},
-    {id:"ff13_lr",name:"라이트닝 리턴즈 파이널 판타지 XIII"}
+  { id:"ff3", title:"FINAL FANTASY", num:"III", numText:"3", year:1990, col:0, games:[
+    {id:"ff3_main", name:"파이널 판타지 III"}
   ]},
-  { id:"ff14",title:"FINAL FANTASY XIV",col:2,games:[
-    {id:"ff14_arr",name:"신생 에오르제아"},{id:"ff14_hw",name:"창천의 이슈가르드"},
-    {id:"ff14_sb",name:"홍련의 해방자"},{id:"ff14_shb",name:"칠흑의 반역자"},
-    {id:"ff14_ew",name:"효월의 종언"},{id:"ff14_dt",name:"황금의 유산"}
+  { id:"ff4", title:"FINAL FANTASY", num:"IV", numText:"4", year:1991, col:0, games:[
+    {id:"ff4_main", name:"파이널 판타지 IV"},
+    {id:"ff4_tay", name:"The After Years 달의 귀환"}
   ]},
-  { id:"ff15",title:"FINAL FANTASY XV",col:2,games:[
-    {id:"ff15_main",name:"파이널 판타지 XV"},{id:"ff15_glad",name:"에피소드 글라디올러스"},
-    {id:"ff15_ignis",name:"에피소드 이그니스"},{id:"ff15_prompto",name:"에피소드 프롬프토"},
-    {id:"ff15_ardyn",name:"에피소드 아덴"},{id:"ff15_brotherhood",name:"브라더후드"},
-    {id:"ff15_kingsglaive",name:"킹스글레이브"}
+  { id:"ff5", title:"FINAL FANTASY", num:"V", numText:"5", year:1992, col:0, games:[
+    {id:"ff5_main", name:"파이널 판타지 V"}
   ]},
-  { id:"ff16",title:"FINAL FANTASY XVI",col:2,games:[{id:"ff16_main",name:"파이널 판타지 XVI"}] },
-  { id:"type0",title:"FINAL FANTASY TYPE-0",col:2,games:[{id:"type0_main",name:"파이널 판타지 Type-0"}] },
-  { id:"tactics",title:"FF TACTICS",col:3,games:[
-    {id:"fft_main",name:"파이널 판타지 택틱스 사자전쟁"},{id:"fft_a",name:"파이널 판타지 택틱스 어드밴스"}, {id:"fft_ic",name:"파이널 판타지 택틱스 이발리스 크로니클즈"}
+  { id:"ff6", title:"FINAL FANTASY", num:"VI", numText:"6", year:1994, col:0, games:[
+    {id:"ff6_main", name:"파이널 판타지 VI"}
   ]},
-  { id:"worldof",title:"WORLD OF FF",col:3,games:[
-    {id:"woff_main",name:"월드 오브 파이널 판타지"},{id:"woff_maxima",name:"월드 오브 파이널 판타지 맥시마"}
+  { id:"ff7", title:"FINAL FANTASY", num:"VII", numText:"7", year:1997, col:0, games:[
+    {id:"ff7_main", name:"파이널 판타지 VII"},
+    {id:"ff7_ac", name:"어드벤트 칠드런 (컴플리트)"},
+    {id:"ff7_bc", name:"비포 크라이시스"},
+    {id:"ff7_cc", name:"크라이시스 코어 (리유니온)"},
+    {id:"ff7_dc", name:"더지 오브 케르베로스"},
+    {id:"ff7_r", name:"파이널 판타지 VII Remake"},
+    {id:"ff7_ec", name:"에버 크라이시스"},
+    {id:"ff7_rb", name:"파이널 판타지 VII Rebirth"}
   ]},
-  { id:"sop",title:"STRANGER OF PARADISE",col:3,games:[
-    {id:"sop_main",name:"스트레인저 오브 파라다이스 FFO"},{id:"sop_bahamut",name:"용왕 바하무트의 시련"},
-    {id:"sop_gilgamesh",name:"자원의 방랑자 길가메시"},{id:"sop_df",name:"Different Future"}
+  { id:"ff8", title:"FINAL FANTASY", num:"VIII", numText:"8", year:1999, col:1, games:[
+    {id:"ff8_main", name:"파이널 판타지 VIII"}
   ]},
-  { id:"theatrhythm",title:"THEATRHYTHM",col:3,games:[
-    {id:"thr_cc",name:"시아트리듬 FF 커튼콜"},{id:"thr_fbl",name:"시아트리듬 FF 파이널 바 라인"}
+  { id:"ff9", title:"FINAL FANTASY", num:"IX", numText:"9", year:2000, col:1, games:[
+    {id:"ff9_main", name:"파이널 판타지 IX"}
   ]},
-  { id:"dissidia",title:"DISSIDIA",col:3,games:[
-    {id:"dis_main",name:"디시디아 파이널 판타지"},{id:"dis_012",name:"디시디아 듀오데심 파이널 판타지"},
-    {id:"dis_nt",name:"디시디아 파이널 판타지 NT"},{id:"dis_oo",name:"디시디아 파이널 판타지 Opera Omnia"}
+  { id:"ff10", title:"FINAL FANTASY", num:"X", numText:"10", year:2001, col:1, games:[
+    {id:"ff10_main", name:"파이널 판타지 X"},
+    {id:"ff10_2", name:"파이널 판타지 X-2"}
+  ]},
+  { id:"ff11", title:"FINAL FANTASY", num:"XI", numText:"11", year:2002, col:1, games:[
+    {id:"ff11_zilart", name:"지라트의 환영"},
+    {id:"ff11_promathia", name:"프로마시아의 주박"},
+    {id:"ff11_aht", name:"아토르간의 보물"},
+    {id:"ff11_altana", name:"알타나의 신병"},
+    {id:"ff11_adoulin", name:"아두린의 마경"},
+    {id:"ff11_rhapsodies", name:"바나딜의 별노래"},
+    {id:"ff11_voracious", name:"식세의 엠브리오"}
+  ]},
+  { id:"ff12", title:"FINAL FANTASY", num:"XII", numText:"12", year:2006, col:1, games:[
+    {id:"ff12_main", name:"파이널 판타지 XII"},
+    {id:"ff12_rw", name:"레버넌트 윙"}
+  ]},
+  { id:"ff13", title:"FINAL FANTASY", num:"XIII", numText:"13", year:2009, col:1, games:[
+    {id:"ff13_main", name:"파이널 판타지 XIII"},
+    {id:"ff13_2", name:"파이널 판타지 XIII-2"},
+    {id:"ff13_lr", name:"라이트닝 리턴즈 파이널 판타지 XIII"}
+  ]},
+  { id:"ff14", title:"FINAL FANTASY", num:"XIV", numText:"14", year:2010, col:2, games:[
+    {id:"ff14_arr", name:"신생 에오르제아"},
+    {id:"ff14_hw", name:"창천의 이슈가르드"},
+    {id:"ff14_sb", name:"홍련의 해방자"},
+    {id:"ff14_shb", name:"칠흑의 반역자"},
+    {id:"ff14_ew", name:"효월의 종언"},
+    {id:"ff14_dt", name:"황금의 유산"}
+  ]},
+  { id:"ff15", title:"FINAL FANTASY", num:"XV", numText:"15", year:2016, col:2, games:[
+    {id:"ff15_main", name:"파이널 판타지 XV"},
+    {id:"ff15_glad", name:"에피소드 글라디올러스"},
+    {id:"ff15_ignis", name:"에피소드 이그니스"},
+    {id:"ff15_prompto", name:"에피소드 프롬프토"},
+    {id:"ff15_ardyn", name:"에피소드 아덴"},
+    {id:"ff15_brotherhood", name:"브라더후드"},
+    {id:"ff15_kingsglaive", name:"킹스글레이브"}
+  ]},
+  { id:"ff16", title:"FINAL FANTASY", num:"XVI", numText:"16", year:2023, col:2, games:[
+    {id:"ff16_main", name:"파이널 판타지 XVI"}
+  ]},
+  { id:"type0", title:"FINAL FANTASY", num:"Type-0", numText:"T0", year:2011, col:2, games:[
+    {id:"type0_main", name:"파이널 판타지 Type-0"}
+  ]},
+  { id:"tactics", title:"FF TACTICS", num:"", numText:"FT", year:1997, col:3, games:[
+    {id:"fft_main", name:"파이널 판타지 택틱스 사자전쟁"},
+    {id:"fft_a", name:"파이널 판타지 택틱스 어드밴스"},
+    {id:"fft_ic", name:"파이널 판타지 택틱스 이발리스 크로니클즈"}
+  ]},
+  { id:"worldof", title:"WORLD OF FF", num:"", numText:"WF", year:2016, col:3, games:[
+    {id:"woff_main", name:"월드 오브 파이널 판타지"},
+    {id:"woff_maxima", name:"월드 오브 파이널 판타지 맥시마"}
+  ]},
+  { id:"sop", title:"STRANGER OF PARADISE", num:"", numText:"SP", year:2022, col:3, games:[
+    {id:"sop_main", name:"스트레인저 오브 파라다이스 FFO"},
+    {id:"sop_bahamut", name:"용왕 바하무트의 시련"},
+    {id:"sop_gilgamesh", name:"자원의 방랑자 길가메시"},
+    {id:"sop_df", name:"Different Future"}
+  ]},
+  { id:"theatrhythm", title:"THEATRHYTHM", num:"", numText:"TH", year:2012, col:3, games:[
+    {id:"thr_cc", name:"시아트리듬 FF 커튼콜"},
+    {id:"thr_fbl", name:"시아트리듬 FF 파이널 바 라인"}
+  ]},
+  { id:"dissidia", title:"DISSIDIA", num:"", numText:"DS", year:2008, col:3, games:[
+    {id:"dis_main", name:"디시디아 파이널 판타지"},
+    {id:"dis_012", name:"디시디아 듀오데심 파이널 판타지"},
+    {id:"dis_nt", name:"디시디아 파이널 판타지 NT"},
+    {id:"dis_oo", name:"디시디아 파이널 판타지 Opera Omnia"}
   ]},
 ];
 
-const TOTAL_GAMES = SERIES.reduce((s,x) => s + x.games.length, 0);
-const COLS = [0,1,2,3];
+// 시리즈 컬러 (작품 이미지 연상)
 const LC = {
-  ff1:"#4a7dc9",ff2:"#c9982e",ff3:"#9040b8",ff4:"#1e8a4e",ff5:"#d06818",ff6:"#149878",
-  ff7:"#2878c0",ff8:"#7838a0",ff9:"#c8a020",ff10:"#0098b0",ff11:"#607080",ff12:"#b08830",
-  ff13:"#d03838",ff14:"#283888",ff15:"#181830",ff16:"#780808",type0:"#c80808",tactics:"#584830",
-  worldof:"#c07828",sop:"#383858",theatrhythm:"#b82868",dissidia:"#3050c0",
+  ff1:"#3b6ab8", ff2:"#b8862a", ff3:"#7a3aa8", ff4:"#1e7a4a",
+  ff5:"#c55c15", ff6:"#1a8a6e", ff7:"#1e6aa8", ff8:"#6a2a92",
+  ff9:"#b88e1c", ff10:"#008aa0", ff11:"#4a5668", ff12:"#a07828",
+  ff13:"#b82e2e", ff14:"#20306e", ff15:"#12121e", ff16:"#6e0a0a",
+  type0:"#a80808", tactics:"#4a3e28", worldof:"#a86a22",
+  sop:"#2e2e4a", theatrhythm:"#9e2258", dissidia:"#2840a8",
 };
 
-// 로고 파일 경로: logos/ 폴더에 시리즈 id.webp로 넣으면 됨
-// 예: logos/ff1.webp, logos/ff7.webp, logos/ff14.webp ...
+const TOTAL_GAMES = SERIES.reduce((s,x) => s + x.games.length, 0);
+const COLS = [0,1,2,3];
+
+Object.assign(window, { SERIES, LC, TOTAL_GAMES, COLS });
+</script>
+<script type="text/babel">
+// tweaks-panel.jsx
+// Reusable Tweaks shell + form-control helpers.
+//
+// Owns the host protocol (listens for __activate_edit_mode / __deactivate_edit_mode,
+// posts __edit_mode_available / __edit_mode_set_keys / __edit_mode_dismissed) so
+// individual prototypes don't re-roll it. Ships a consistent set of controls so you
+// don't hand-draw <input type="range">, segmented radios, steppers, etc.
+//
+// Usage (in an HTML file that loads React + Babel):
+//
+//   const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+//     "primaryColor": "#D97757",
+//     "fontSize": 16,
+//     "density": "regular",
+//     "dark": false
+//   }/*EDITMODE-END*/;
+//
+//   function App() {
+//     const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+//     return (
+//       <div style={{ fontSize: t.fontSize, color: t.primaryColor }}>
+//         Hello
+//         <TweaksPanel>
+//           <TweakSection label="Typography" />
+//           <TweakSlider label="Font size" value={t.fontSize} min={10} max={32} unit="px"
+//                        onChange={(v) => setTweak('fontSize', v)} />
+//           <TweakRadio  label="Density" value={t.density}
+//                        options={['compact', 'regular', 'comfy']}
+//                        onChange={(v) => setTweak('density', v)} />
+//           <TweakSection label="Theme" />
+//           <TweakColor  label="Primary" value={t.primaryColor}
+//                        onChange={(v) => setTweak('primaryColor', v)} />
+//           <TweakToggle label="Dark mode" value={t.dark}
+//                        onChange={(v) => setTweak('dark', v)} />
+//         </TweaksPanel>
+//       </div>
+//     );
+//   }
+//
+// ─────────────────────────────────────────────────────────────────────────────
+
+const __TWEAKS_STYLE = `
+  .twk-panel{position:fixed;right:16px;bottom:16px;z-index:2147483646;width:280px;
+    max-height:calc(100vh - 32px);display:flex;flex-direction:column;
+    background:rgba(250,249,247,.78);color:#29261b;
+    -webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);
+    border:.5px solid rgba(255,255,255,.6);border-radius:14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 12px 40px rgba(0,0,0,.18);
+    font:11.5px/1.4 ui-sans-serif,system-ui,-apple-system,sans-serif;overflow:hidden}
+  .twk-hd{display:flex;align-items:center;justify-content:space-between;
+    padding:10px 8px 10px 14px;cursor:move;user-select:none}
+  .twk-hd b{font-size:12px;font-weight:600;letter-spacing:.01em}
+  .twk-x{appearance:none;border:0;background:transparent;color:rgba(41,38,27,.55);
+    width:22px;height:22px;border-radius:6px;cursor:default;font-size:13px;line-height:1}
+  .twk-x:hover{background:rgba(0,0,0,.06);color:#29261b}
+  .twk-body{padding:2px 14px 14px;display:flex;flex-direction:column;gap:10px;
+    overflow-y:auto;overflow-x:hidden;min-height:0;
+    scrollbar-width:thin;scrollbar-color:rgba(0,0,0,.15) transparent}
+  .twk-body::-webkit-scrollbar{width:8px}
+  .twk-body::-webkit-scrollbar-track{background:transparent;margin:2px}
+  .twk-body::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:4px;
+    border:2px solid transparent;background-clip:content-box}
+  .twk-body::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,.25);
+    border:2px solid transparent;background-clip:content-box}
+  .twk-row{display:flex;flex-direction:column;gap:5px}
+  .twk-row-h{flex-direction:row;align-items:center;justify-content:space-between;gap:10px}
+  .twk-lbl{display:flex;justify-content:space-between;align-items:baseline;
+    color:rgba(41,38,27,.72)}
+  .twk-lbl>span:first-child{font-weight:500}
+  .twk-val{color:rgba(41,38,27,.5);font-variant-numeric:tabular-nums}
+
+  .twk-sect{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:rgba(41,38,27,.45);padding:10px 0 0}
+  .twk-sect:first-child{padding-top:0}
+
+  .twk-field{appearance:none;width:100%;height:26px;padding:0 8px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:7px;
+    background:rgba(255,255,255,.6);color:inherit;font:inherit;outline:none}
+  .twk-field:focus{border-color:rgba(0,0,0,.25);background:rgba(255,255,255,.85)}
+  select.twk-field{padding-right:22px;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='rgba(0,0,0,.5)' d='M0 0h10L5 6z'/></svg>");
+    background-repeat:no-repeat;background-position:right 8px center}
+
+  .twk-slider{appearance:none;-webkit-appearance:none;width:100%;height:4px;margin:6px 0;
+    border-radius:999px;background:rgba(0,0,0,.12);outline:none}
+  .twk-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;
+    width:14px;height:14px;border-radius:50%;background:#fff;
+    border:.5px solid rgba(0,0,0,.12);box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:default}
+  .twk-slider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;
+    background:#fff;border:.5px solid rgba(0,0,0,.12);box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:default}
+
+  .twk-seg{position:relative;display:flex;padding:2px;border-radius:8px;
+    background:rgba(0,0,0,.06);user-select:none}
+  .twk-seg-thumb{position:absolute;top:2px;bottom:2px;border-radius:6px;
+    background:rgba(255,255,255,.9);box-shadow:0 1px 2px rgba(0,0,0,.12);
+    transition:left .15s cubic-bezier(.3,.7,.4,1),width .15s}
+  .twk-seg.dragging .twk-seg-thumb{transition:none}
+  .twk-seg button{appearance:none;position:relative;z-index:1;flex:1;border:0;
+    background:transparent;color:inherit;font:inherit;font-weight:500;height:22px;
+    border-radius:6px;cursor:default;padding:0}
+
+  .twk-toggle{position:relative;width:32px;height:18px;border:0;border-radius:999px;
+    background:rgba(0,0,0,.15);transition:background .15s;cursor:default;padding:0}
+  .twk-toggle[data-on="1"]{background:#34c759}
+  .twk-toggle i{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;
+    background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
+  .twk-toggle[data-on="1"] i{transform:translateX(14px)}
+
+  .twk-num{display:flex;align-items:center;height:26px;padding:0 0 0 8px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:7px;background:rgba(255,255,255,.6)}
+  .twk-num-lbl{font-weight:500;color:rgba(41,38,27,.6);cursor:ew-resize;
+    user-select:none;padding-right:8px}
+  .twk-num input{flex:1;min-width:0;height:100%;border:0;background:transparent;
+    font:inherit;font-variant-numeric:tabular-nums;text-align:right;padding:0 8px 0 0;
+    outline:none;color:inherit;-moz-appearance:textfield}
+  .twk-num input::-webkit-inner-spin-button,.twk-num input::-webkit-outer-spin-button{
+    -webkit-appearance:none;margin:0}
+  .twk-num-unit{padding-right:8px;color:rgba(41,38,27,.45)}
+
+  .twk-btn{appearance:none;height:26px;padding:0 12px;border:0;border-radius:7px;
+    background:rgba(0,0,0,.78);color:#fff;font:inherit;font-weight:500;cursor:default}
+  .twk-btn:hover{background:rgba(0,0,0,.88)}
+  .twk-btn.secondary{background:rgba(0,0,0,.06);color:inherit}
+  .twk-btn.secondary:hover{background:rgba(0,0,0,.1)}
+
+  .twk-swatch{appearance:none;-webkit-appearance:none;width:56px;height:22px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:6px;padding:0;cursor:default;
+    background:transparent;flex-shrink:0}
+  .twk-swatch::-webkit-color-swatch-wrapper{padding:0}
+  .twk-swatch::-webkit-color-swatch{border:0;border-radius:5.5px}
+  .twk-swatch::-moz-color-swatch{border:0;border-radius:5.5px}
+`;
+
+// ── useTweaks ───────────────────────────────────────────────────────────────
+// Single source of truth for tweak values. setTweak persists via the host
+// (__edit_mode_set_keys → host rewrites the EDITMODE block on disk).
+function useTweaks(defaults) {
+  const [values, setValues] = React.useState(defaults);
+  const setTweak = React.useCallback((key, val) => {
+    setValues((prev) => ({ ...prev, [key]: val }));
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { [key]: val } }, '*');
+  }, []);
+  return [values, setTweak];
+}
+
+// ── TweaksPanel ─────────────────────────────────────────────────────────────
+// Floating shell. Registers the protocol listener BEFORE announcing
+// availability — if the announce ran first, the host's activate could land
+// before our handler exists and the toolbar toggle would silently no-op.
+// The close button posts __edit_mode_dismissed so the host's toolbar toggle
+// flips off in lockstep; the host echoes __deactivate_edit_mode back which
+// is what actually hides the panel.
+function TweaksPanel({ title = 'Tweaks', children }) {
+  const [open, setOpen] = React.useState(false);
+  const dragRef = React.useRef(null);
+  const offsetRef = React.useRef({ x: 16, y: 16 });
+  const PAD = 16;
+
+  const clampToViewport = React.useCallback(() => {
+    const panel = dragRef.current;
+    if (!panel) return;
+    const w = panel.offsetWidth, h = panel.offsetHeight;
+    const maxRight = Math.max(PAD, window.innerWidth - w - PAD);
+    const maxBottom = Math.max(PAD, window.innerHeight - h - PAD);
+    offsetRef.current = {
+      x: Math.min(maxRight, Math.max(PAD, offsetRef.current.x)),
+      y: Math.min(maxBottom, Math.max(PAD, offsetRef.current.y)),
+    };
+    panel.style.right = offsetRef.current.x + 'px';
+    panel.style.bottom = offsetRef.current.y + 'px';
+  }, []);
+
+  React.useEffect(() => {
+    if (!open) return;
+    clampToViewport();
+    if (typeof ResizeObserver === 'undefined') {
+      window.addEventListener('resize', clampToViewport);
+      return () => window.removeEventListener('resize', clampToViewport);
+    }
+    const ro = new ResizeObserver(clampToViewport);
+    ro.observe(document.documentElement);
+    return () => ro.disconnect();
+  }, [open, clampToViewport]);
+
+  React.useEffect(() => {
+    const onMsg = (e) => {
+      const t = e?.data?.type;
+      if (t === '__activate_edit_mode') setOpen(true);
+      else if (t === '__deactivate_edit_mode') setOpen(false);
+    };
+    window.addEventListener('message', onMsg);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', onMsg);
+  }, []);
+
+  const dismiss = () => {
+    setOpen(false);
+    window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*');
+  };
+
+  const onDragStart = (e) => {
+    const panel = dragRef.current;
+    if (!panel) return;
+    const r = panel.getBoundingClientRect();
+    const sx = e.clientX, sy = e.clientY;
+    const startRight = window.innerWidth - r.right;
+    const startBottom = window.innerHeight - r.bottom;
+    const move = (ev) => {
+      offsetRef.current = {
+        x: startRight - (ev.clientX - sx),
+        y: startBottom - (ev.clientY - sy),
+      };
+      clampToViewport();
+    };
+    const up = () => {
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseup', up);
+    };
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+  };
+
+  if (!open) return null;
+  return (
+    <>
+      <style>{__TWEAKS_STYLE}</style>
+      <div ref={dragRef} className="twk-panel"
+           style={{ right: offsetRef.current.x, bottom: offsetRef.current.y }}>
+        <div className="twk-hd" onMouseDown={onDragStart}>
+          <b>{title}</b>
+          <button className="twk-x" aria-label="Close tweaks"
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onClick={dismiss}>✕</button>
+        </div>
+        <div className="twk-body">{children}</div>
+      </div>
+    </>
+  );
+}
+
+// ── Layout helpers ──────────────────────────────────────────────────────────
+
+function TweakSection({ label, children }) {
+  return (
+    <>
+      <div className="twk-sect">{label}</div>
+      {children}
+    </>
+  );
+}
+
+function TweakRow({ label, value, children, inline = false }) {
+  return (
+    <div className={inline ? 'twk-row twk-row-h' : 'twk-row'}>
+      <div className="twk-lbl">
+        <span>{label}</span>
+        {value != null && <span className="twk-val">{value}</span>}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+// ── Controls ────────────────────────────────────────────────────────────────
+
+function TweakSlider({ label, value, min = 0, max = 100, step = 1, unit = '', onChange }) {
+  return (
+    <TweakRow label={label} value={`${value}${unit}`}>
+      <input type="range" className="twk-slider" min={min} max={max} step={step}
+             value={value} onChange={(e) => onChange(Number(e.target.value))} />
+    </TweakRow>
+  );
+}
+
+function TweakToggle({ label, value, onChange }) {
+  return (
+    <div className="twk-row twk-row-h">
+      <div className="twk-lbl"><span>{label}</span></div>
+      <button type="button" className="twk-toggle" data-on={value ? '1' : '0'}
+              role="switch" aria-checked={!!value}
+              onClick={() => onChange(!value)}><i /></button>
+    </div>
+  );
+}
+
+function TweakRadio({ label, value, options, onChange }) {
+  const trackRef = React.useRef(null);
+  const [dragging, setDragging] = React.useState(false);
+  const opts = options.map((o) => (typeof o === 'object' ? o : { value: o, label: o }));
+  const idx = Math.max(0, opts.findIndex((o) => o.value === value));
+  const n = opts.length;
+
+  // The active value is read by pointer-move handlers attached for the lifetime
+  // of a drag — ref it so a stale closure doesn't fire onChange for every move.
+  const valueRef = React.useRef(value);
+  valueRef.current = value;
+
+  const segAt = (clientX) => {
+    const r = trackRef.current.getBoundingClientRect();
+    const inner = r.width - 4;
+    const i = Math.floor(((clientX - r.left - 2) / inner) * n);
+    return opts[Math.max(0, Math.min(n - 1, i))].value;
+  };
+
+  const onPointerDown = (e) => {
+    setDragging(true);
+    const v0 = segAt(e.clientX);
+    if (v0 !== valueRef.current) onChange(v0);
+    const move = (ev) => {
+      if (!trackRef.current) return;
+      const v = segAt(ev.clientX);
+      if (v !== valueRef.current) onChange(v);
+    };
+    const up = () => {
+      setDragging(false);
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  };
+
+  return (
+    <TweakRow label={label}>
+      <div ref={trackRef} role="radiogroup" onPointerDown={onPointerDown}
+           className={dragging ? 'twk-seg dragging' : 'twk-seg'}>
+        <div className="twk-seg-thumb"
+             style={{ left: `calc(2px + ${idx} * (100% - 4px) / ${n})`,
+                      width: `calc((100% - 4px) / ${n})` }} />
+        {opts.map((o) => (
+          <button key={o.value} type="button" role="radio" aria-checked={o.value === value}>
+            {o.label}
+          </button>
+        ))}
+      </div>
+    </TweakRow>
+  );
+}
+
+function TweakSelect({ label, value, options, onChange }) {
+  return (
+    <TweakRow label={label}>
+      <select className="twk-field" value={value} onChange={(e) => onChange(e.target.value)}>
+        {options.map((o) => {
+          const v = typeof o === 'object' ? o.value : o;
+          const l = typeof o === 'object' ? o.label : o;
+          return <option key={v} value={v}>{l}</option>;
+        })}
+      </select>
+    </TweakRow>
+  );
+}
+
+function TweakText({ label, value, placeholder, onChange }) {
+  return (
+    <TweakRow label={label}>
+      <input className="twk-field" type="text" value={value} placeholder={placeholder}
+             onChange={(e) => onChange(e.target.value)} />
+    </TweakRow>
+  );
+}
+
+function TweakNumber({ label, value, min, max, step = 1, unit = '', onChange }) {
+  const clamp = (n) => {
+    if (min != null && n < min) return min;
+    if (max != null && n > max) return max;
+    return n;
+  };
+  const startRef = React.useRef({ x: 0, val: 0 });
+  const onScrubStart = (e) => {
+    e.preventDefault();
+    startRef.current = { x: e.clientX, val: value };
+    const decimals = (String(step).split('.')[1] || '').length;
+    const move = (ev) => {
+      const dx = ev.clientX - startRef.current.x;
+      const raw = startRef.current.val + dx * step;
+      const snapped = Math.round(raw / step) * step;
+      onChange(clamp(Number(snapped.toFixed(decimals))));
+    };
+    const up = () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  };
+  return (
+    <div className="twk-num">
+      <span className="twk-num-lbl" onPointerDown={onScrubStart}>{label}</span>
+      <input type="number" value={value} min={min} max={max} step={step}
+             onChange={(e) => onChange(clamp(Number(e.target.value)))} />
+      {unit && <span className="twk-num-unit">{unit}</span>}
+    </div>
+  );
+}
+
+function TweakColor({ label, value, onChange }) {
+  return (
+    <div className="twk-row twk-row-h">
+      <div className="twk-lbl"><span>{label}</span></div>
+      <input type="color" className="twk-swatch" value={value}
+             onChange={(e) => onChange(e.target.value)} />
+    </div>
+  );
+}
+
+function TweakButton({ label, onClick, secondary = false }) {
+  return (
+    <button type="button" className={secondary ? 'twk-btn secondary' : 'twk-btn'}
+            onClick={onClick}>{label}</button>
+  );
+}
+
+Object.assign(window, {
+  useTweaks, TweaksPanel, TweakSection, TweakRow,
+  TweakSlider, TweakToggle, TweakRadio, TweakSelect,
+  TweakText, TweakNumber, TweakColor, TweakButton,
+});
+</script>
+<script type="text/babel">const { useState, useEffect, useCallback, useRef, Fragment } = React;
+
 const LOGO_DIR = "logos/";
 const LOGO_EXT = ".webp";
 
+// 캔버스용 로고 이미지 프리로드 (logos/ 폴더 참조)
+function loadLogoImg(id) {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => resolve(null);
+    img.src = LOGO_DIR + id + LOGO_EXT;
+  });
+}
+
 function load(k,d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } }
-function save(k,v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+function saveLS(k,v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+
+const DEFAULT_TWEAKS = /*EDITMODE-BEGIN*/{
+  "theme": "parchment",
+  "showYears": true,
+  "showRomanHero": true,
+  "useLogosIfAvailable": true
+}/*EDITMODE-END*/;
 
 function App() {
+  const [tw, setTweak] = useTweaks(DEFAULT_TWEAKS);
   const [played, setPlayed] = useState(() => load("ff-played", {}));
   const [saving, setSaving] = useState(false);
   const [subtitle, setSubtitle] = useState(() => load("ff-sub", "마지막헛것어디까지해봤니"));
@@ -201,19 +1038,20 @@ function App() {
   const [logoLoaded, setLogoLoaded] = useState({});
   const [twitterId, setTwitterId] = useState(() => load("ff-twt", ""));
 
-  useEffect(() => { save("ff-twt", twitterId); }, [twitterId]);
+  useEffect(() => { document.documentElement.dataset.theme = tw.theme; }, [tw.theme]);
+  useEffect(() => { saveLS("ff-played", played); }, [played]);
+  useEffect(() => { saveLS("ff-twt", twitterId); }, [twitterId]);
 
-  // 로고 이미지 사전 로드
   useEffect(() => {
+    // 페이지 로드 시 로고 프리로드 (crossOrigin 설정으로 canvas 오염 방지)
     SERIES.forEach(s => {
       const img = new Image();
+      img.crossOrigin = "anonymous";
       img.onload = () => setLogoLoaded(prev => ({...prev, [s.id]: img}));
-      img.onerror = () => {}; // 파일 없으면 무시, 텍스트 폴백
+      img.onerror = () => {};
       img.src = LOGO_DIR + s.id + LOGO_EXT;
     });
   }, []);
-
-  useEffect(() => { save("ff-played", played); }, [played]);
 
   const toggle = (id) => setPlayed(p => ({...p, [id]: !p[id]}));
   const toggleSeries = (s) => {
@@ -226,179 +1064,382 @@ function App() {
   const playedCount = Object.values(played).filter(Boolean).length;
   const pct = Math.round((playedCount / TOTAL_GAMES) * 100);
 
-  const saveSub = () => { setEditingSub(false); save("ff-sub", subtitle); };
+  const saveSub = () => { setEditingSub(false); saveLS("ff-sub", subtitle); };
 
   const exportImage = useCallback(async () => {
     setSaving(true);
-    try { await document.fonts.load('700 20px "Cinzel"'); } catch {}
-    try { await document.fonts.load('400 14px "Noto Sans KR"'); } catch {}
+    try {
+    // 폰트 로딩 (타임아웃 1.5초)
+    const withTimeout = (p, ms=1500) => Promise.race([p, new Promise(r=>setTimeout(r,ms))]);
+    await withTimeout(document.fonts.load('900 44px "Cinzel"')).catch(()=>{});
+    await withTimeout(document.fonts.load('400 14px "Noto Sans KR"')).catch(()=>{});
+    await withTimeout(document.fonts.load('500 14px "Noto Sans KR"')).catch(()=>{});
+    await withTimeout(document.fonts.load('400 18px "Cormorant Garamond"')).catch(()=>{});
     await new Promise(r => setTimeout(r, 200));
 
-    const S=2, W=1200, padTop=140, padBot=55, padX=32, colGap=24;
-    const colW=(W-padX*2-colGap*3)/4;
-    const logoH=68, itemH=28, secGap=18, logoPB=6;
+    // 캔버스용 로고 재로드 (crossOrigin 없이 로드해야 canvas 오염 방지)
+    const logoImgs = {};
+    await Promise.all(SERIES.map(async s => {
+      const img = await loadLogoImg(s.id);
+      if (img) logoImgs[s.id] = img;
+    }));
 
-    const colHs = COLS.map(c => {
-      const ss = SERIES.filter(s => s.col === c);
-      return ss.reduce((h,s) => h + logoH + logoPB + s.games.length * itemH + secGap, 0);
-    });
+    // 테마 팔레트
+    const themeVars = getComputedStyle(document.documentElement);
+    const gv = (k, fb) => themeVars.getPropertyValue(k).trim() || fb;
+    const palette = {
+      bg:       gv('--paper',     '#f7efdd'),
+      bg2:      gv('--paper-2',   '#fbf5e6'),
+      ink:      gv('--ink',       '#2a1d10'),
+      inkSoft:  gv('--ink-soft',  '#5a4a36'),
+      inkMute:  gv('--ink-mute',  '#907a5a'),
+      line:     gv('--line',      '#c9b890'),
+      lineSoft: gv('--line-soft', '#d9cba8'),
+      accent:   gv('--accent',    '#8a1c1c'),
+    };
+
+    const S=2, W=1400, padX=40, colGap=28;
+    const colW = (W - padX*2 - colGap*3) / 4;
+    // 헤더 높이: 타이틀(68) + 부제(26) + 진행바박스(52) + 여백(24)
+    const padTop = 68 + 26 + 52 + 24;
+    const padBot = 70;
+    const headH = 68, itemH = 26, secGap = 20;
+
+    const colHs = COLS.map(c =>
+      SERIES.filter(s => s.col === c)
+        .reduce((h, s) => h + headH + s.games.length * itemH + secGap, 0)
+    );
     const H = padTop + Math.max(...colHs) + padBot;
 
     const cv = document.createElement("canvas");
     cv.width = W*S; cv.height = H*S;
     const cx = cv.getContext("2d");
-    cx.scale(S,S);
+    cx.scale(S, S);
 
-    cx.fillStyle = "#fdf6ec"; cx.fillRect(0,0,W,H);
+    // 헬퍼: textBaseline을 middle로 고정해서 사용
+    const txt = (text, x, y, opts = {}) => {
+      if (opts.align)  cx.textAlign    = opts.align;
+      if (opts.color)  cx.fillStyle    = opts.color;
+      if (opts.font)   cx.font         = opts.font;
+      cx.textBaseline = "middle";
+      cx.fillText(text, x, y);
+    };
 
-    cx.save();
-    cx.strokeStyle = "rgba(180,160,130,0.06)"; cx.lineWidth = 0.5;
-    for(let x=0;x<W;x+=30){cx.beginPath();cx.moveTo(x,0);cx.lineTo(x,H);cx.stroke();}
-    for(let y=0;y<H;y+=30){cx.beginPath();cx.moveTo(0,y);cx.lineTo(W,y);cx.stroke();}
-    cx.restore();
+    // ── 배경 ──
+    cx.fillStyle = palette.bg; cx.fillRect(0, 0, W, H);
+    cx.fillStyle = palette.inkMute + "08";
+    for (let i = 0; i < 300; i++) cx.fillRect(Math.random()*W, Math.random()*H, 1, 1);
 
-    cx.textAlign="center";
-    cx.fillStyle="#b03030"; cx.font='900 42px "Cinzel", serif';
-    cx.fillText("Final Fantasy 진도 체크판", W/2, 52);
-    cx.fillStyle="#8a6040"; cx.font='400 16px "Noto Sans KR", sans-serif';
-    cx.fillText("~ "+subtitle+" ~", W/2, 80);
+    // ── 타이틀 ── (measureText로 두 부분을 이어 붙임)
+    const titleY = 40;
+    cx.textBaseline = "middle";
+    cx.textAlign    = "center";
+    cx.font = '900 44px "Cinzel", serif';
+    const ffW = cx.measureText("FINAL FANTASY ").width;
+    cx.font = 'italic 400 36px "Cormorant Garamond", serif';
+    const jdW = cx.measureText("진도").width;
+    const titleTotalW = ffW + jdW;
+    const titleStartX = W/2 - titleTotalW/2;
 
-    const bW=260,bH=14,bX=(W-bW)/2,bY=96;
-    cx.fillStyle="#e8dcc8"; cx.beginPath(); cx.roundRect(bX,bY,bW,bH,7); cx.fill();
-    if(playedCount>0){cx.fillStyle="#b03030";cx.beginPath();cx.roundRect(bX,bY,Math.max((playedCount/TOTAL_GAMES)*bW,8),bH,7);cx.fill();}
-    cx.fillStyle="#6a4a30"; cx.font='500 13px "Noto Sans KR", sans-serif';
-    cx.fillText(playedCount+" / "+TOTAL_GAMES+" ("+pct+"%)", W/2, bY+bH+18);
+    cx.textAlign = "left";
+    cx.font = '900 44px "Cinzel", serif';
+    txt("FINAL FANTASY ", titleStartX, titleY, { color: palette.ink });
+    cx.font = 'italic 400 36px "Cormorant Garamond", serif';
+    txt("진도", titleStartX + ffW, titleY + 2, { color: palette.accent });
 
-    // 트위터 아이디 (오른쪽 상단)
-    if(twitterId.trim()) {
-      cx.textAlign="right"; cx.fillStyle="#b09070"; cx.font='400 13px "Noto Sans KR", sans-serif';
-      cx.fillText("@"+twitterId.trim(), W-padX, 28);
+    // 부제
+    txt("~ " + subtitle + " ~", W/2, titleY + 38, {
+      align: "center", color: palette.inkSoft,
+      font: 'italic 400 16px "Cormorant Garamond", serif'
+    });
+
+    // ── 진행률 박스 ──
+    const boxX = padX, boxY = titleY + 62, boxW = W - padX*2, boxH = 44;
+    cx.fillStyle = palette.bg2;
+    cx.strokeStyle = palette.line; cx.lineWidth = 1;
+    cx.fillRect(boxX, boxY, boxW, boxH);
+    cx.strokeRect(boxX, boxY, boxW, boxH);
+
+    const boxMidY = boxY + boxH/2;
+    txt(pct + "%", boxX + 20, boxMidY,
+      { align:"left", color: palette.accent, font: '900 28px "Cinzel", serif' });
+    txt(playedCount + " / " + TOTAL_GAMES + " COMPLETED", boxX + 110, boxMidY - 1,
+      { align:"left", color: palette.inkSoft, font: '500 12px "JetBrains Mono", monospace' });
+
+    // 진행률 바
+    const barX = boxX + 330, barY = boxMidY - 5, barW = boxW - 350 - (twitterId.trim() ? 160 : 20), barH = 10;
+    cx.fillStyle = palette.lineSoft; cx.fillRect(barX, barY, barW, barH);
+    if (playedCount > 0) {
+      cx.fillStyle = palette.accent;
+      cx.fillRect(barX, barY, Math.max((playedCount/TOTAL_GAMES)*barW, 4), barH);
     }
 
-    cx.strokeStyle="rgba(160,140,110,0.18)"; cx.lineWidth=1;
-    for(let i=1;i<4;i++){const lx=padX+i*(colW+colGap)-colGap/2;cx.beginPath();cx.moveTo(lx,padTop-8);cx.lineTo(lx,H-44);cx.stroke();}
+    // 트위터
+    if (twitterId.trim()) {
+      txt("@ " + twitterId.trim(), boxX + boxW - 16, boxMidY,
+        { align:"right", color: palette.inkMute, font: '500 11px "JetBrains Mono", monospace' });
+    }
 
-    cx.textAlign="left";
-    COLS.forEach(c => {
+    // ── 칼럼 구분선 ──
+    cx.strokeStyle = palette.lineSoft; cx.lineWidth = 1;
+    for (let i = 1; i < 4; i++) {
+      const lx = padX + i*(colW+colGap) - colGap/2;
+      cx.beginPath(); cx.moveTo(lx, padTop-10); cx.lineTo(lx, H-padBot+10); cx.stroke();
+    }
+
+    // ── 시리즈 ──
+    for (const c of COLS) {
       const ss = SERIES.filter(s => s.col === c);
       const x = padX + c*(colW+colGap);
       let y = padTop;
 
-      ss.forEach(s => {
-        const clr = LC[s.id]||"#666";
-        cx.fillStyle=clr+"14"; cx.beginPath(); cx.roundRect(x,y,colW,logoH,6); cx.fill();
-        cx.strokeStyle=clr+"35"; cx.lineWidth=1.2; cx.beginPath(); cx.roundRect(x,y,colW,logoH,6); cx.stroke();
+      for (const s of ss) {
+        const clr = LC[s.id] || palette.ink;
+        const doneN = s.games.filter(g => played[g.id]).length;
+        const allDone = doneN === s.games.length;
+        const hdrColor = allDone ? palette.accent : clr;
+        const headMidY = y + headH/2;
 
-        if(logoLoaded[s.id]) {
-          // 로고 이미지 그리기
-          const img = logoLoaded[s.id];
-          const maxW = colW - 16, maxH = logoH - 10;
+        // 로고 이미지가 있으면 그리기 (없으면 텍스트 폴백)
+        if (logoImgs[s.id]) {
+          const img = logoImgs[s.id];
+          const maxW = colW - 8, maxH = headH - 16;
           const ratio = Math.min(maxW / img.naturalWidth, maxH / img.naturalHeight);
-          const drawW = img.naturalWidth * ratio, drawH = img.naturalHeight * ratio;
-          cx.drawImage(img, x + (colW - drawW) / 2, y + (logoH - drawH) / 2, drawW, drawH);
+          const dw = img.naturalWidth * ratio, dh = img.naturalHeight * ratio;
+          cx.drawImage(img, x + (colW - dw)/2, y + (headH - dh)/2, dw, dh);
         } else {
-          cx.textAlign="center"; cx.fillStyle=clr; cx.font='700 14px "Cinzel", serif';
-          cx.fillText(s.title, x+colW/2, y+30);
-          cx.fillStyle=clr+"50"; cx.font='400 9px "Noto Sans KR", sans-serif';
-          cx.fillText("LOGO", x+colW/2, y+50);
+          // 로만 숫자 or 약어
+          const isRoman = tw.showRomanHero && s.num && /^[IVX]+$/.test(s.num);
+          const numText = isRoman ? s.num : (s.numText || "FF");
+          const numFontSize = isRoman
+            ? (s.num.length <= 4 ? 42 : s.num.length <= 6 ? 32 : 24)
+            : 18;
+          txt(numText, x + 28, headMidY,
+            { align:"center", color: hdrColor, font: `900 ${numFontSize}px "Cinzel", serif` });
+
+          // 타이틀 + 메타 (숫자 오른쪽)
+          const metaX = x + (isRoman ? 58 : 46);
+          txt(s.title, metaX, headMidY - 11,
+            { align:"left", color: palette.inkSoft, font: '600 9.5px "Cinzel", serif' });
+          const yearTxt = tw.showYears && s.year ? s.year + "  ·  " : "";
+          txt(yearTxt + doneN + "/" + s.games.length + (allDone ? "  ·  ✓" : ""),
+            metaX, headMidY + 7,
+            { align:"left", color: palette.inkMute, font: '500 8.5px "JetBrains Mono", monospace' });
         }
-        cx.textAlign="left";
-        y += logoH+logoPB;
 
-        s.games.forEach(g => {
-          const ck=!!played[g.id]; const cbX=x+6,cbY=y+4,cbS=14;
-          if(ck){
-            cx.fillStyle="#b03030"; cx.beginPath(); cx.roundRect(cbX,cbY,cbS,cbS,2.5); cx.fill();
-            cx.strokeStyle="#fff"; cx.lineWidth=1.8; cx.beginPath();
-            cx.moveTo(cbX+3,cbY+7); cx.lineTo(cbX+6,cbY+10); cx.lineTo(cbX+11,cbY+4); cx.stroke();
+        // 하단선 + 미니 게이지
+        const lineY = y + headH - 2;
+        cx.strokeStyle = allDone ? palette.accent : palette.line; cx.lineWidth = 1;
+        cx.beginPath(); cx.moveTo(x, lineY); cx.lineTo(x+colW, lineY); cx.stroke();
+        if (doneN > 0) {
+          cx.strokeStyle = hdrColor; cx.lineWidth = 2;
+          cx.beginPath(); cx.moveTo(x, lineY); cx.lineTo(x + (doneN/s.games.length)*colW, lineY); cx.stroke();
+        }
+        y += headH + 4;
+
+        // 게임 목록
+        for (let idx = 0; idx < s.games.length; idx++) {
+          const g = s.games[idx];
+          const ck = !!played[g.id];
+          const rowMidY = y + itemH/2;
+          const cbX = x + 26, cbY = rowMidY - 6, cbS = 13;
+
+          // 번호
+          txt(String(idx+1).padStart(2,'0'), x + 4, rowMidY,
+            { align:"left", color: palette.inkMute, font: '500 8px "JetBrains Mono", monospace' });
+
+          // 체크박스
+          if (ck) {
+            cx.fillStyle = clr; cx.fillRect(cbX, cbY, cbS, cbS);
+            cx.strokeStyle = "#fff"; cx.lineWidth = 1.8;
+            cx.lineCap = "round"; cx.lineJoin = "round";
+            cx.beginPath();
+            cx.moveTo(cbX+2.5, cbY+6.5); cx.lineTo(cbX+5.5, cbY+9.5); cx.lineTo(cbX+10.5, cbY+3.5);
+            cx.stroke();
           } else {
-            cx.strokeStyle="#c8b8a8"; cx.lineWidth=1.2; cx.beginPath(); cx.roundRect(cbX,cbY,cbS,cbS,2.5); cx.stroke();
+            cx.strokeStyle = palette.line; cx.lineWidth = 1.2;
+            cx.strokeRect(cbX, cbY, cbS, cbS);
           }
-          cx.fillStyle=ck?"#2a1a0a":"#b0a090";
-          cx.font=ck?'700 14px "Noto Sans KR", sans-serif':'400 11.5px "Noto Sans KR", sans-serif';
-          cx.fillText(g.name, cbX+cbS+8, cbY+12);
-          y+=itemH;
-        });
-        y+=secGap;
-      });
-    });
 
-    cx.textAlign="center"; cx.fillStyle="#b09070"; cx.font='400 11px "Noto Sans KR", sans-serif';
-    cx.fillText("스쿠에니 유루스마지.", W/2, H-30);
-    cx.fillText("내보낸 날짜: "+new Date().toLocaleDateString("ko-KR",{year:"numeric",month:"2-digit",day:"2-digit"}), W/2, H-14);
+          // 이름 (middle baseline)
+          txt(g.name, cbX + cbS + 7, rowMidY,
+            {
+              align: "left",
+              color: ck ? palette.ink : palette.inkMute,
+              font:  ck ? '500 12.5px "Noto Sans KR", sans-serif'
+                        : '300 12px "Noto Sans KR", sans-serif'
+            });
+          y += itemH;
+        }
+        y += secGap;
+      }
+    }
 
-    const a=document.createElement("a");
-    a.download="ff_progress_"+new Date().toISOString().split("T")[0]+".png";
-    a.href=cv.toDataURL("image/png"); a.click();
-    setSaving(false);
-  }, [played, subtitle, playedCount, pct, logoLoaded, twitterId]);
+    // ── 푸터 ──
+    txt("—  스쿠에니 유루스마지  —", W/2, H - 44,
+      { align:"center", color: palette.inkMute, font: 'italic 400 13px "Cormorant Garamond", serif' });
+    txt(new Date().toLocaleDateString("ko-KR", {year:"numeric",month:"2-digit",day:"2-digit"}),
+      W/2, H - 24,
+      { align:"center", color: palette.inkMute, font: '500 10px "JetBrains Mono", monospace' });
+
+    const a = document.createElement("a");
+    a.download = "ff_progress_" + new Date().toISOString().split("T")[0] + ".png";
+    a.href = cv.toDataURL("image/png");
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => document.body.removeChild(a), 100);
+    } catch(e) { console.error("Export error:", e); }
+    finally { setSaving(false); }
+  }, [played, subtitle, playedCount, pct, twitterId, tw]);
 
   return (
-    <div className="root">
-      <div className="hdr">
-        <h1 className="ttl">Final Fantasy 진도 체크판</h1>
-        {editingSub ? (
-          <div className="sub">~ <input autoFocus value={subtitle} onChange={e=>setSubtitle(e.target.value)} onBlur={saveSub} onKeyDown={e=>e.key==="Enter"&&saveSub()} /> ~</div>
-        ) : (
-          <div className="sub" onClick={()=>setEditingSub(true)}>~ {subtitle} ~</div>
-        )}
-        <div className="pbar-wrap">
-          <div className="pbar"><div className="pfill" style={{width:pct+"%"}} /></div>
-          <div className="ptxt">{playedCount} / {TOTAL_GAMES} ({pct}%)</div>
-        </div>
-        <div className="twt-wrap">
-          <span className="twt-label">@</span>
-          <input className="twt-input" placeholder="트위터 아이디 (선택)" value={twitterId} onChange={e=>setTwitterId(e.target.value)} />
-        </div>
-        <div className="acts">
-          <button className="btn-export" onClick={exportImage} disabled={saving}>{saving?"내보내는 중...":"이미지 내보내기"}</button>
-          <button className="btn btn-d" onClick={()=>setPlayed({})}>초기화</button>
-        </div>
-      </div>
-      <div className="grid">
-        {COLS.map(c=>(
-          <div key={c}>
-            {SERIES.filter(s=>s.col===c).map(s=>{
-              const allDone=s.games.every(g=>played[g.id]);
-              const doneN=s.games.filter(g=>played[g.id]).length;
-              const clr=LC[s.id]||"#666";
-              return (
-                <div key={s.id} className={"ser"+(allDone?" done":"")}>
-                  <div className="logo" style={{background:clr+"12"}} onClick={()=>toggleSeries(s)} title="시리즈 전체 토글">
-                    <div className="sc">{allDone?"✓ ALL":doneN>0?doneN+"/"+s.games.length:""}</div>
-                    {logoLoaded[s.id] ? (
-                      <img className="logo-img" src={LOGO_DIR+s.id+LOGO_EXT} alt={s.title} draggable="false" />
-                    ) : (
-                      <React.Fragment>
-                        <div className="lt" style={{color:clr}}>{s.title}</div>
-                        <div className="lp">LOGO</div>
-                      </React.Fragment>
-                    )}
-                  </div>
-                  <div className="gl">
-                    {s.games.map(g=>{
-                      const on=!!played[g.id];
-                      return (
-                        <div key={g.id} className="gi" onClick={()=>toggle(g.id)}>
-                          <div className={"cb"+(on?" on":"")}>
-                            {on&&<svg viewBox="0 0 10 10" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1.5 5.5 L4 8 L8.5 2" /></svg>}
-                          </div>
-                          <span className={"gn"+(on?" on":"")}>{g.name}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })}
+    <React.Fragment>
+      <div className="wrap">
+        <div className="hdr">
+          <div className="hdr-inner">
+            <div className="hdr-left">
+              <div className="eyebrow">
+                <span className="dot"></span>
+                <span>Personal Ledger</span>
+              </div>
+            </div>
+            <h1 className="ttl">
+              FINAL FANTASY <span className="amp">진도</span>
+            </h1>
+            <div className="hdr-right">
+              <div className="eyebrow">
+                <span>{SERIES.length} Series</span>
+                <span>·</span>
+                <span>{TOTAL_GAMES} Titles</span>
+                <span className="dot"></span>
+              </div>
+            </div>
           </div>
-        ))}
+
+          {editingSub ? (
+            <div className="sub"><span className="orn">❖</span><input autoFocus value={subtitle} onChange={e=>setSubtitle(e.target.value)} onBlur={saveSub} onKeyDown={e=>e.key==="Enter"&&saveSub()} /><span className="orn">❖</span></div>
+          ) : (
+            <div className="sub" onClick={()=>setEditingSub(true)} title="클릭하여 수정">
+              <span className="orn">❖</span>{subtitle}<span className="orn">❖</span>
+            </div>
+          )}
+
+          <div className="progress-card">
+            <div className="seal">
+              <div className="seal-star"></div>
+              <div className="seal-pct">{pct}%</div>
+              <div className="seal-lbl">Sealed</div>
+            </div>
+            <div className="pbar-col">
+              <div className="pbar-top">
+                <span>진행도 — PROGRESS</span>
+                <span><span className="pct">{playedCount}</span> <span style={{color:"var(--ink-mute)"}}>/ {TOTAL_GAMES}</span></span>
+              </div>
+              <div className="pbar"><div className="pfill" style={{width:pct+"%"}} /></div>
+              <div className="pbar-ticks">
+                <span>0</span><span>25</span><span>50</span><span>75</span><span>100</span>
+              </div>
+            </div>
+            <div className="stat-big">
+              <div>
+                <div style={{display:"flex",alignItems:"baseline",gap:0}}>
+                  <span className="n">{playedCount}</span>
+                  <span className="sep">/</span>
+                  <span className="d">{TOTAL_GAMES}</span>
+                </div>
+                <div className="stat-label">Titles Conquered</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="actions">
+            <div className="twt">
+              <div className="twt-at">@</div>
+              <input placeholder="twitter id (optional)" value={twitterId} onChange={e=>setTwitterId(e.target.value)} />
+            </div>
+            <button className="btn btn-primary" onClick={exportImage} disabled={saving}>
+              {saving ? "EXPORTING..." : "Export Image"}
+            </button>
+            <button className="btn btn-danger" onClick={()=>{ if(confirm("전체 기록을 초기화할까요?")) setPlayed({}); }}>Reset</button>
+          </div>
+        </div>
+
+        <div className="grid">
+          {COLS.map(c => (
+            <div key={c}>
+              {SERIES.filter(s=>s.col===c).map(s => {
+                const doneN = s.games.filter(g=>played[g.id]).length;
+                const allDone = doneN === s.games.length;
+                const clr = LC[s.id] || "#666";
+                const hasLogo = tw.useLogosIfAvailable && logoLoaded[s.id];
+                const useNum = tw.showRomanHero && s.num;
+                return (
+                  <div key={s.id} className={"ser" + (allDone ? " done" : "")} style={{"--ser-c": clr}}>
+                    <div className="ser-head" onClick={()=>toggleSeries(s)} title="시리즈 전체 토글">
+                      {hasLogo ? (
+                        <img className="logo-img" src={LOGO_DIR+s.id+LOGO_EXT} alt={s.title} draggable="false" style={{gridColumn:"1 / -1", maxHeight:56}} />
+                      ) : (
+                        <React.Fragment>
+                          <div className={"ser-num" + (useNum ? "" : " small")}>
+                            {useNum ? s.num : (s.numText || "FF")}
+                          </div>
+                          <div className="ser-meta">
+                            <div className="ser-title">{s.title}</div>
+                            <div className="ser-sub">
+                              {tw.showYears && s.year && <span className="ser-year">{s.year}</span>}
+                              {tw.showYears && s.year && <span>·</span>}
+                              <span className="ser-count"><b>{doneN}</b>/{s.games.length}</span>
+                              {allDone && <span className="ser-seal-mark">SEALED</span>}
+                            </div>
+                          </div>
+                        </React.Fragment>
+                      )}
+                    </div>
+                    <div className="ser-gauge">
+                      <div className="ser-gauge-fill" style={{width: (s.games.length ? (doneN/s.games.length)*100 : 0) + "%"}} />
+                    </div>
+                    <div className="games">
+                      {s.games.map((g, idx) => {
+                        const on = !!played[g.id];
+                        return (
+                          <div key={g.id} className="gi" onClick={()=>toggle(g.id)}>
+                            <span className="gi-num">{String(idx+1).padStart(2,'0')}</span>
+                            <div className={"cb"+(on?" on":"")}>
+                              {on && <svg viewBox="0 0 10 10" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1.5 5.5 L4 8 L8.5 2" /></svg>}
+                            </div>
+                            <span className={"gn"+(on?" on":"")}>{g.name}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+
+        <div className="ft">
+          <span className="orn">❖</span>
+          스쿠에니 유루스마지
+          <span className="orn">❖</span>
+        </div>
       </div>
-      <div className="acts" style={{padding:"12px 16px 0"}}>
-        <button className="btn-export" onClick={exportImage} disabled={saving}>{saving?"내보내는 중...":"이미지 내보내기"}</button>
-      </div>
-      <div className="ft">스쿠에니 유루스마지</div>
-    </div>
+
+      <TweaksPanel title="Tweaks">
+        <TweakSection label="Theme" />
+        <TweakRadio
+          label="테마"
+          value={tw.theme}
+          options={["parchment","midnight","minimal"]}
+          onChange={(v)=>setTweak("theme", v)}
+        />
+        <TweakSection label="Display" />
+        <TweakToggle label="로만 숫자 강조" value={tw.showRomanHero} onChange={(v)=>setTweak("showRomanHero", v)} />
+        <TweakToggle label="발매 연도 표시" value={tw.showYears} onChange={(v)=>setTweak("showYears", v)} />
+        <TweakToggle label="logos/ 폴더 로고 사용" value={tw.useLogosIfAvailable} onChange={(v)=>setTweak("useLogosIfAvailable", v)} />
+      </TweaksPanel>
+    </React.Fragment>
   );
 }
 
