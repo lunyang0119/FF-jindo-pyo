@@ -376,6 +376,13 @@
     display: block;
     filter: var(--logo-filter, none);
   }
+  .ser-logo-wrap {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 0;
+  }
   html[data-theme="midnight"] .logo-img { filter: brightness(0) invert(1) opacity(0.9); }
 
   /* ==== 게임 리스트 ==== */
@@ -765,9 +772,9 @@ function App() {
     cx.fillStyle = palette.inkMute + "08";
     for (let i = 0; i < 300; i++) cx.fillRect(Math.random()*W, Math.random()*H, 1, 1);
 
-    // ── 타이틀 ── (measureText로 두 부분을 이어 붙임)
-    const titleY = 56;
-    cx.textBaseline = "middle";
+    // ── 타이틀 ── (alphabetic baseline으로 그리기 — Cinzel/Noto Serif 시각 정렬)
+    const titleBaselineY = 84;  // 알파벳 baseline 위치
+    cx.textBaseline = "alphabetic";
     cx.textAlign    = "center";
     cx.font = '900 60px "Cinzel", serif';
     const ffW = cx.measureText("FINAL FANTASY ").width;
@@ -778,19 +785,22 @@ function App() {
     const titleStartX = W/2 - titleTotalW/2;
 
     cx.textAlign = "left";
+    cx.fillStyle = palette.ink;
     cx.font = '900 60px "Cinzel", serif';
-    txt("FINAL FANTASY ", titleStartX, titleY, { color: palette.ink });
+    cx.fillText("FINAL FANTASY ", titleStartX, titleBaselineY);
+    cx.fillStyle = palette.accent;
     cx.font = koTitleFont;
-    txt("진도", titleStartX + ffW, titleY, { color: palette.accent });
+    cx.fillText("진도", titleStartX + ffW, titleBaselineY);
 
-    // 부제
-    txt("~ " + subtitle + " ~", W/2, titleY + 54, {
+    // 부제 (다시 middle baseline)
+    cx.textBaseline = "middle";
+    txt("~ " + subtitle + " ~", W/2, titleBaselineY + 26, {
       align: "center", color: palette.inkSoft,
       font: 'italic 400 22px "Cormorant Garamond", serif'
     });
 
     // 트위터 ID (부제 아래)
-    let cursorY = titleY + 54 + 28;
+    let cursorY = titleBaselineY + 26 + 28;
     if (hasTwt) {
       txt("@" + twitterId.trim(), W/2, cursorY + 14,
         { align:"center", color: palette.ink, font: '700 22px "JetBrains Mono", monospace' });
@@ -1070,7 +1080,14 @@ function App() {
                   <div key={s.id} className={"ser" + (allDone ? " done" : "")} style={{"--ser-c": clr}}>
                     <div className="ser-head" onClick={()=>toggleSeries(s)} title="시리즈 전체 토글">
                       {hasLogo ? (
-                        <img className="logo-img" src={LOGO_DIR+s.id+LOGO_EXT} alt={s.title} draggable="false" style={{gridColumn:"1 / -1", maxHeight:56}} />
+                        <React.Fragment>
+                          <div className={"ser-num" + (useNum ? "" : " small")}>
+                            {useNum ? s.num : (s.numText || "FF")}
+                          </div>
+                          <div className="ser-logo-wrap">
+                            <img className="logo-img" src={LOGO_DIR+s.id+LOGO_EXT} alt={s.title} draggable="false" />
+                          </div>
+                        </React.Fragment>
                       ) : (
                         <React.Fragment>
                           <div className={"ser-num" + (useNum ? "" : " small")}>
