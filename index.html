@@ -696,8 +696,25 @@ function App() {
     await withTimeout(document.fonts.load('700 22px "JetBrains Mono"')).catch(()=>{});
     await new Promise(r => setTimeout(r, 200));
 
-    // 이미 로드된 로고 이미지 사용 (새로 로드하면 canvas가 오염됨)
-    const logoImgs = logoLoaded;
+    // 로고 이미지 로드 (export 시점에 새로 await — useCallback stale closure 회피 + 빠진 로드 보정)
+    const loadImg = (src) => new Promise(resolve => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => resolve(img);
+      img.onerror = () => {
+        // crossOrigin 실패 시 같은 origin으로 폴백
+        const img2 = new Image();
+        img2.onload = () => resolve(img2);
+        img2.onerror = () => resolve(null);
+        img2.src = src;
+      };
+      img.src = src;
+    });
+    const logoImgs = {};
+    await Promise.all(SERIES.map(async s => {
+      const img = await loadImg(LOGO_DIR + s.id + LOGO_EXT);
+      if (img) logoImgs[s.id] = img;
+    }));
 
     // 테마 팔레트
     const themeVars = getComputedStyle(document.documentElement);
@@ -831,17 +848,50 @@ function App() {
         const allDone = doneN === s.games.length;
         const hdrColor = allDone ? palette.accent : clr;
         const headMidY = y + headH/2;
+        const hasLogo = !!logoImgs[s.id];
+        const isRoman = s.num && /^[IVX]+$/.test(s.num);
 
-        // 로고 이미지가 있으면 그리기 (없으면 텍스트 폴백)
-        if (logoImgs[s.id]) {
+        // (A) 로만 숫자 + 로고 옆에 배치 (메인 시리즈 — 로고 있을 때)
+        if (hasLogo && isRoman) {
+          const numText = s.num;
+          const numFontSize = numText.length <= 2 ? 56 : numText.length <= 4 ? 44 : 34;
+          const numFont = `900 ${numFontSize}px "Cinzel", serif`;
+          cx.font = numFont;
+          const numW = cx.measureText(numText).width;
+          // 왼쪽: 큰 로만 숫자
+          txt(numText, x + 8, headMidY,
+            { align:"left", color: hdrColor, font: numFont });
+          // 오른쪽: 로고 (숫자 옆 공간을 채움)
           const img = logoImgs[s.id];
-          const maxW = colW - 12, maxH = headH - 22;
+          const logoX0 = x + 8 + numW + 14;
+          const maxW = (x + colW) - logoX0 - 4;
+          const maxH = headH - 20;
           const ratio = Math.min(maxW / img.naturalWidth, maxH / img.naturalHeight);
           const dw = img.naturalWidth * ratio, dh = img.naturalHeight * ratio;
-          cx.drawImage(img, x + (colW - dw)/2, y + (headH - dh)/2, dw, dh);
+          cx.drawImage(img, logoX0, headMidY - dh/2, dw, dh);
+
+        // (B) 로만 없음 + 로고 있음 (Tactics/WoFF/SoP/Theatrhythm/Type-0)
+        //     → 약어(FT, WF, SP, TH, T0) 왼쪽 + 로고 가운데 정렬
+        } else if (hasLogo) {
+          const abbr = s.numText || "FF";
+          const abbrFontSize = abbr.length <= 2 ? 42 : 32;
+          const abbrFont = `900 ${abbrFontSize}px "Cinzel", serif`;
+          cx.font = abbrFont;
+          const abbrW = cx.measureText(abbr).width;
+          txt(abbr, x + 8, headMidY,
+            { align:"left", color: hdrColor, font: abbrFont });
+
+          // 로고: 남은 공간(약어 오른쪽 ~ 칼럼 끝)의 가운데에 정렬
+          const img = logoImgs[s.id];
+          const regionX = x + 8 + abbrW + 14;
+          const regionW = (x + colW) - regionX - 4;
+          const maxH = headH - 18;
+          const ratio = Math.min(regionW / img.naturalWidth, maxH / img.naturalHeight);
+          const dw = img.naturalWidth * ratio, dh = img.naturalHeight * ratio;
+          cx.drawImage(img, regionX + (regionW - dw)/2, headMidY - dh/2, dw, dh);
+
+        // (C) 로고 없음 — 기존 텍스트 폴백 (로만 + FINAL FANTASY + 연도)
         } else {
-          // 로만 숫자 or 약어 (좌정렬 → 실제 폭만큼 메타 텍스트 오프셋)
-          const isRoman = true && s.num && /^[IVX]+$/.test(s.num);
           const numText = isRoman ? s.num : (s.numText || "FF");
           const numFontSize = isRoman
             ? (s.num.length <= 2 ? 56 : s.num.length <= 4 ? 44 : 34)
@@ -852,11 +902,10 @@ function App() {
           txt(numText, x + 8, headMidY,
             { align:"left", color: hdrColor, font: numFont });
 
-          // 타이틀 + 메타 (숫자 오른쪽, 실제 폭 + 14px 간격)
           const metaX = x + 8 + numW + 14;
           txt(s.title, metaX, headMidY - 14,
             { align:"left", color: palette.inkSoft, font: '600 13px "Cinzel", serif' });
-          const yearTxt = true && s.year ? s.year + "  ·  " : "";
+          const yearTxt = s.year ? s.year + "  ·  " : "";
           txt(yearTxt + doneN + "/" + s.games.length + (allDone ? "  ·  ✓" : ""),
             metaX, headMidY + 10,
             { align:"left", color: palette.inkMute, font: '500 12px "JetBrains Mono", monospace' });
