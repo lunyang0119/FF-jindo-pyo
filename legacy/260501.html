@@ -6,7 +6,7 @@
 <title>Final Fantasy 진도 체크판</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Cinzel:wght@400;500;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Gowun+Batang:wght@400;700&family=JetBrains+Mono:wght@400;500;700&family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Serif+KR:wght@400;700;900&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
   :root {
     /* 양피지 저널 — 기본 테마 */
@@ -109,8 +109,7 @@
     line-height: 1.05;
     text-align: center;
   }
-  .ttl .amp { color: var(--accent); font-weight: var(--ko-weight, 900); font-family: var(--ko-font, 'Noto Serif KR'), serif; letter-spacing: -0.01em; }
-  .twt-line { text-align: center; margin-top: 10px; font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 700; color: var(--ink); letter-spacing: 0.04em; }
+  .ttl .amp { color: var(--accent); font-weight: 400; font-style: italic; font-family: 'Cormorant Garamond', serif; }
 
   .sub {
     font-family: 'Cormorant Garamond', serif;
@@ -240,7 +239,6 @@
     padding: 0 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px;
     color: var(--ink-mute); border-right: 1px solid var(--line);
     background: var(--paper); align-self: stretch; display: flex; align-items: center;
-    white-space: nowrap;
   }
   .twt input {
     font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink);
@@ -455,7 +453,7 @@
   /* Tweaks 버튼 트리거는 호스트에서 처리 */
 </style>
 </head>
-<body style="font-family: Quicksand">
+<body>
 <div class="page-bg"></div>
 <div id="app"></div>
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
@@ -567,8 +565,7 @@ const SERIES = [
     {id:"dis_main", name:"디시디아 파이널 판타지"},
     {id:"dis_012", name:"디시디아 듀오데심 파이널 판타지"},
     {id:"dis_nt", name:"디시디아 파이널 판타지 NT"},
-    {id:"dis_oo", name:"디시디아 파이널 판타지 Opera Omnia"},
-    {id:"dis_dduell", name:"디시디아 듀엘룸 파이널 판타지"}
+    {id:"dis_oo", name:"디시디아 파이널 판타지 Opera Omnia"}
   ]},
 ];
 
@@ -585,18 +582,7 @@ const LC = {
 const TOTAL_GAMES = SERIES.reduce((s,x) => s + x.games.length, 0);
 const COLS = [0,1,2,3];
 
-// 트위터 가로형 내보내기 전용 6컬럼 배치 (각 컬럼 높이 균등화)
-const EXPORT_LAYOUT = [
-  ["ff1","ff2","ff3","ff4"],                     // 4 series, 6 games
-  ["ff5","ff6","ff7"],                           // 3 series, 10 games
-  ["ff8","ff9","ff10","ff11"],                   // 4 series, 11 games
-  ["ff12","ff13","ff14"],                        // 3 series, 11 games
-  ["ff15","ff16","type0","tactics"],             // 4 series, 12 games
-  ["worldof","sop","theatrhythm","dissidia"],    // 4 series, 12 games
-];
-const SERIES_BY_ID = Object.fromEntries(SERIES.map(s => [s.id, s]));
-
-Object.assign(window, { SERIES, LC, TOTAL_GAMES, COLS, EXPORT_LAYOUT, SERIES_BY_ID });
+Object.assign(window, { SERIES, LC, TOTAL_GAMES, COLS });
 </script>
 <script type="text/babel">
 // tweaks-panel.jsx
@@ -1036,25 +1022,12 @@ function loadLogoImg(id) {
 function load(k,d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } }
 function saveLS(k,v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
 
-// 하드코딩 — 푸터에 표시
-const MADE_BY = "@your_handle";
-const SITE_URL = location.origin + location.pathname;
-
 const DEFAULT_TWEAKS = /*EDITMODE-BEGIN*/{
   "theme": "parchment",
   "showYears": true,
   "showRomanHero": true,
-  "useLogosIfAvailable": true,
-  "koFont": "notoSerif"
+  "useLogosIfAvailable": true
 }/*EDITMODE-END*/;
-
-// 한글 제목 폰트 후보
-const KO_FONTS = {
-  notoSerif:  { family: '"Noto Serif KR", serif',    weight: 900, sizeAdj: 1.0  },
-  gowun:      { family: '"Gowun Batang", serif',     weight: 700, sizeAdj: 1.0  },
-  myeongjo:   { family: '"Nanum Myeongjo", serif',   weight: 800, sizeAdj: 1.05 },
-  blackHan:   { family: '"Black Han Sans", sans-serif', weight: 400, sizeAdj: 0.95 },
-};
 
 function App() {
   const [tw, setTweak] = useTweaks(DEFAULT_TWEAKS);
@@ -1064,23 +1037,10 @@ function App() {
   const [editingSub, setEditingSub] = useState(false);
   const [logoLoaded, setLogoLoaded] = useState({});
   const [twitterId, setTwitterId] = useState(() => load("ff-twt", ""));
-  const [copied, setCopied] = useState(false);
 
   useEffect(() => { document.documentElement.dataset.theme = tw.theme; }, [tw.theme]);
-  useEffect(() => {
-    const f = KO_FONTS[tw.koFont] || KO_FONTS.notoSerif;
-    document.documentElement.style.setProperty('--ko-font', f.family);
-    document.documentElement.style.setProperty('--ko-weight', f.weight);
-  }, [tw.koFont]);
   useEffect(() => { saveLS("ff-played", played); }, [played]);
   useEffect(() => { saveLS("ff-twt", twitterId); }, [twitterId]);
-
-  const copyUrl = () => {
-    navigator.clipboard.writeText(SITE_URL).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
-    }).catch(() => {});
-  };
 
   useEffect(() => {
     // 페이지 로드 시 로고 프리로드 (crossOrigin 설정으로 canvas 오염 방지)
@@ -1111,20 +1071,18 @@ function App() {
     try {
     // 폰트 로딩 (타임아웃 1.5초)
     const withTimeout = (p, ms=1500) => Promise.race([p, new Promise(r=>setTimeout(r,ms))]);
-    const koFont = KO_FONTS[tw.koFont] || KO_FONTS.notoSerif;
-    const koSize = Math.round(60 * koFont.sizeAdj);
-    await withTimeout(document.fonts.load('900 60px "Cinzel"')).catch(()=>{});
-    await withTimeout(document.fonts.load(`${koFont.weight} ${koSize}px ${koFont.family}`)).catch(()=>{});
-    await withTimeout(document.fonts.load('600 13px "Cinzel"')).catch(()=>{});
-    await withTimeout(document.fonts.load('400 16px "Noto Sans KR"')).catch(()=>{});
-    await withTimeout(document.fonts.load('500 17px "Noto Sans KR"')).catch(()=>{});
-    await withTimeout(document.fonts.load('400 22px "Cormorant Garamond"')).catch(()=>{});
-    await withTimeout(document.fonts.load('500 16px "JetBrains Mono"')).catch(()=>{});
-    await withTimeout(document.fonts.load('700 22px "JetBrains Mono"')).catch(()=>{});
+    await withTimeout(document.fonts.load('900 44px "Cinzel"')).catch(()=>{});
+    await withTimeout(document.fonts.load('400 14px "Noto Sans KR"')).catch(()=>{});
+    await withTimeout(document.fonts.load('500 14px "Noto Sans KR"')).catch(()=>{});
+    await withTimeout(document.fonts.load('400 18px "Cormorant Garamond"')).catch(()=>{});
     await new Promise(r => setTimeout(r, 200));
 
-    // 이미 로드된 로고 이미지 사용 (새로 로드하면 canvas가 오염됨)
-    const logoImgs = logoLoaded;
+    // 캔버스용 로고 재로드 (crossOrigin 없이 로드해야 canvas 오염 방지)
+    const logoImgs = {};
+    await Promise.all(SERIES.map(async s => {
+      const img = await loadLogoImg(s.id);
+      if (img) logoImgs[s.id] = img;
+    }));
 
     // 테마 팔레트
     const themeVars = getComputedStyle(document.documentElement);
@@ -1140,19 +1098,16 @@ function App() {
       accent:   gv('--accent',    '#8a1c1c'),
     };
 
-    // 트위터 가로형: W=2400, 6컬럼 → 약 2:1 비율 (타임라인에서 잘리지 않음)
-    const S=2, W=2400, padX=52, colGap=30;
-    const NCOLS = EXPORT_LAYOUT.length;
-    const colW = (W - padX*2 - colGap*(NCOLS-1)) / NCOLS;
-    // 헤더: 타이틀(64) + 부제(40) + 트위터(36) + 진행바박스(72) + 여백
-    const hasTwt = !!twitterId.trim();
-    const padTop = 64 + 40 + (hasTwt ? 36 : 0) + 76 + 30;
-    const padBot = 96;
-    const headH = 90, itemH = 36, secGap = 22;
+    const S=2, W=1400, padX=40, colGap=28;
+    const colW = (W - padX*2 - colGap*3) / 4;
+    // 헤더 높이: 타이틀(68) + 부제(26) + 진행바박스(52) + 여백(24)
+    const padTop = 68 + 26 + 52 + 24;
+    const padBot = 70;
+    const headH = 68, itemH = 26, secGap = 20;
 
-    const colHs = EXPORT_LAYOUT.map(ids =>
-      ids.map(id => SERIES_BY_ID[id])
-         .reduce((h, s) => h + headH + s.games.length * itemH + secGap, 0)
+    const colHs = COLS.map(c =>
+      SERIES.filter(s => s.col === c)
+        .reduce((h, s) => h + headH + s.games.length * itemH + secGap, 0)
     );
     const H = padTop + Math.max(...colHs) + padBot;
 
@@ -1176,79 +1131,65 @@ function App() {
     for (let i = 0; i < 300; i++) cx.fillRect(Math.random()*W, Math.random()*H, 1, 1);
 
     // ── 타이틀 ── (measureText로 두 부분을 이어 붙임)
-    const titleY = 56;
+    const titleY = 40;
     cx.textBaseline = "middle";
     cx.textAlign    = "center";
-    cx.font = '900 60px "Cinzel", serif';
+    cx.font = '900 44px "Cinzel", serif';
     const ffW = cx.measureText("FINAL FANTASY ").width;
-    const koTitleFont = `${koFont.weight} ${koSize}px ${koFont.family}`;
-    cx.font = koTitleFont;
+    cx.font = 'italic 400 36px "Cormorant Garamond", serif';
     const jdW = cx.measureText("진도").width;
     const titleTotalW = ffW + jdW;
     const titleStartX = W/2 - titleTotalW/2;
 
     cx.textAlign = "left";
-    cx.font = '900 60px "Cinzel", serif';
+    cx.font = '900 44px "Cinzel", serif';
     txt("FINAL FANTASY ", titleStartX, titleY, { color: palette.ink });
-    cx.font = koTitleFont;
-    txt("진도", titleStartX + ffW, titleY, { color: palette.accent });
+    cx.font = 'italic 400 36px "Cormorant Garamond", serif';
+    txt("진도", titleStartX + ffW, titleY + 2, { color: palette.accent });
 
     // 부제
-    txt("~ " + subtitle + " ~", W/2, titleY + 54, {
+    txt("~ " + subtitle + " ~", W/2, titleY + 38, {
       align: "center", color: palette.inkSoft,
-      font: 'italic 400 22px "Cormorant Garamond", serif'
+      font: 'italic 400 16px "Cormorant Garamond", serif'
     });
 
-    // 트위터 ID (부제 아래)
-    let cursorY = titleY + 54 + 28;
-    if (hasTwt) {
-      txt("@" + twitterId.trim(), W/2, cursorY + 14,
-        { align:"center", color: palette.ink, font: '700 22px "JetBrains Mono", monospace' });
-      cursorY += 36;
-    }
-
     // ── 진행률 박스 ──
-    const boxX = padX, boxY = cursorY + 8, boxW = W - padX*2, boxH = 64;
+    const boxX = padX, boxY = titleY + 62, boxW = W - padX*2, boxH = 44;
     cx.fillStyle = palette.bg2;
-    cx.strokeStyle = palette.line; cx.lineWidth = 1.4;
+    cx.strokeStyle = palette.line; cx.lineWidth = 1;
     cx.fillRect(boxX, boxY, boxW, boxH);
     cx.strokeRect(boxX, boxY, boxW, boxH);
 
     const boxMidY = boxY + boxH/2;
-    txt(pct + "%", boxX + 28, boxMidY,
-      { align:"left", color: palette.accent, font: '900 40px "Cinzel", serif' });
-    txt(playedCount + " / " + TOTAL_GAMES + " COMPLETED", boxX + 158, boxMidY - 1,
-      { align:"left", color: palette.inkSoft, font: '500 16px "JetBrains Mono", monospace' });
+    txt(pct + "%", boxX + 20, boxMidY,
+      { align:"left", color: palette.accent, font: '900 28px "Cinzel", serif' });
+    txt(playedCount + " / " + TOTAL_GAMES + " COMPLETED", boxX + 110, boxMidY - 1,
+      { align:"left", color: palette.inkSoft, font: '500 12px "JetBrains Mono", monospace' });
 
-    // 진행률 바 (트위터 자리 없어서 전체 폭 사용)
-    const barX = boxX + 460, barY = boxMidY - 7, barW = boxW - 480 - 24, barH = 14;
-    // 옅은 트랙
-    cx.fillStyle = palette.lineSoft; cx.globalAlpha = 0.6;
-    cx.fillRect(barX, barY, barW, barH);
-    cx.globalAlpha = 1;
-    // 25/50/75 눈금
-    cx.fillStyle = palette.line;
-    [0.25, 0.5, 0.75].forEach(t => {
-      cx.fillRect(barX + barW*t - 0.5, barY - 3, 1, barH + 6);
-    });
+    // 진행률 바
+    const barX = boxX + 330, barY = boxMidY - 5, barW = boxW - 350 - (twitterId.trim() ? 160 : 20), barH = 10;
+    cx.fillStyle = palette.lineSoft; cx.fillRect(barX, barY, barW, barH);
     if (playedCount > 0) {
       cx.fillStyle = palette.accent;
-      cx.fillRect(barX, barY, Math.max((playedCount/TOTAL_GAMES)*barW, 6), barH);
+      cx.fillRect(barX, barY, Math.max((playedCount/TOTAL_GAMES)*barW, 4), barH);
     }
-    // 바 외곽 라인
-    cx.strokeStyle = palette.line; cx.lineWidth = 1;
-    cx.strokeRect(barX, barY, barW, barH);
+
+    // 트위터
+    if (twitterId.trim()) {
+      txt("@ " + twitterId.trim(), boxX + boxW - 16, boxMidY,
+        { align:"right", color: palette.inkMute, font: '500 11px "JetBrains Mono", monospace' });
+    }
 
     // ── 칼럼 구분선 ──
     cx.strokeStyle = palette.lineSoft; cx.lineWidth = 1;
-    for (let i = 1; i < NCOLS; i++) {
+    for (let i = 1; i < 4; i++) {
       const lx = padX + i*(colW+colGap) - colGap/2;
       cx.beginPath(); cx.moveTo(lx, padTop-10); cx.lineTo(lx, H-padBot+10); cx.stroke();
     }
 
     // ── 시리즈 ──
-    for (let c = 0; c < NCOLS; c++) {
-      const ss = EXPORT_LAYOUT[c].map(id => SERIES_BY_ID[id]);
+    for (const c of COLS) {
+      const ss = SERIES.filter(s => s.col === c);
       const x = padX + c*(colW+colGap);
       let y = padTop;
 
@@ -1262,75 +1203,71 @@ function App() {
         // 로고 이미지가 있으면 그리기 (없으면 텍스트 폴백)
         if (logoImgs[s.id]) {
           const img = logoImgs[s.id];
-          const maxW = colW - 12, maxH = headH - 22;
+          const maxW = colW - 8, maxH = headH - 16;
           const ratio = Math.min(maxW / img.naturalWidth, maxH / img.naturalHeight);
           const dw = img.naturalWidth * ratio, dh = img.naturalHeight * ratio;
           cx.drawImage(img, x + (colW - dw)/2, y + (headH - dh)/2, dw, dh);
         } else {
-          // 로만 숫자 or 약어 (좌정렬 → 실제 폭만큼 메타 텍스트 오프셋)
+          // 로만 숫자 or 약어
           const isRoman = tw.showRomanHero && s.num && /^[IVX]+$/.test(s.num);
           const numText = isRoman ? s.num : (s.numText || "FF");
           const numFontSize = isRoman
-            ? (s.num.length <= 2 ? 56 : s.num.length <= 4 ? 44 : 34)
-            : 42;
-          const numFont = `900 ${numFontSize}px "Cinzel", serif`;
-          cx.font = numFont;
-          const numW = cx.measureText(numText).width;
-          txt(numText, x + 8, headMidY,
-            { align:"left", color: hdrColor, font: numFont });
+            ? (s.num.length <= 4 ? 42 : s.num.length <= 6 ? 32 : 24)
+            : 18;
+          txt(numText, x + 28, headMidY,
+            { align:"center", color: hdrColor, font: `900 ${numFontSize}px "Cinzel", serif` });
 
-          // 타이틀 + 메타 (숫자 오른쪽, 실제 폭 + 14px 간격)
-          const metaX = x + 8 + numW + 14;
-          txt(s.title, metaX, headMidY - 14,
-            { align:"left", color: palette.inkSoft, font: '600 13px "Cinzel", serif' });
+          // 타이틀 + 메타 (숫자 오른쪽)
+          const metaX = x + (isRoman ? 58 : 46);
+          txt(s.title, metaX, headMidY - 11,
+            { align:"left", color: palette.inkSoft, font: '600 9.5px "Cinzel", serif' });
           const yearTxt = tw.showYears && s.year ? s.year + "  ·  " : "";
           txt(yearTxt + doneN + "/" + s.games.length + (allDone ? "  ·  ✓" : ""),
-            metaX, headMidY + 10,
-            { align:"left", color: palette.inkMute, font: '500 12px "JetBrains Mono", monospace' });
+            metaX, headMidY + 7,
+            { align:"left", color: palette.inkMute, font: '500 8.5px "JetBrains Mono", monospace' });
         }
 
         // 하단선 + 미니 게이지
         const lineY = y + headH - 2;
-        cx.strokeStyle = allDone ? palette.accent : palette.line; cx.lineWidth = 1.2;
+        cx.strokeStyle = allDone ? palette.accent : palette.line; cx.lineWidth = 1;
         cx.beginPath(); cx.moveTo(x, lineY); cx.lineTo(x+colW, lineY); cx.stroke();
         if (doneN > 0) {
-          cx.strokeStyle = hdrColor; cx.lineWidth = 2.5;
+          cx.strokeStyle = hdrColor; cx.lineWidth = 2;
           cx.beginPath(); cx.moveTo(x, lineY); cx.lineTo(x + (doneN/s.games.length)*colW, lineY); cx.stroke();
         }
-        y += headH + 6;
+        y += headH + 4;
 
         // 게임 목록
         for (let idx = 0; idx < s.games.length; idx++) {
           const g = s.games[idx];
           const ck = !!played[g.id];
           const rowMidY = y + itemH/2;
-          const cbS = 18;
-          const cbX = x + 34, cbY = rowMidY - cbS/2;
+          const cbX = x + 26, cbY = rowMidY - 6, cbS = 13;
 
           // 번호
-          txt(String(idx+1).padStart(2,'0'), x + 6, rowMidY,
-            { align:"left", color: palette.inkMute, font: '500 11px "JetBrains Mono", monospace' });
+          txt(String(idx+1).padStart(2,'0'), x + 4, rowMidY,
+            { align:"left", color: palette.inkMute, font: '500 8px "JetBrains Mono", monospace' });
 
           // 체크박스
           if (ck) {
             cx.fillStyle = clr; cx.fillRect(cbX, cbY, cbS, cbS);
-            cx.strokeStyle = "#fff"; cx.lineWidth = 2.4;
+            cx.strokeStyle = "#fff"; cx.lineWidth = 1.8;
             cx.lineCap = "round"; cx.lineJoin = "round";
             cx.beginPath();
-            cx.moveTo(cbX+3.5, cbY+9); cx.lineTo(cbX+7.5, cbY+13); cx.lineTo(cbX+14.5, cbY+5);
+            cx.moveTo(cbX+2.5, cbY+6.5); cx.lineTo(cbX+5.5, cbY+9.5); cx.lineTo(cbX+10.5, cbY+3.5);
             cx.stroke();
           } else {
-            cx.strokeStyle = palette.line; cx.lineWidth = 1.5;
+            cx.strokeStyle = palette.line; cx.lineWidth = 1.2;
             cx.strokeRect(cbX, cbY, cbS, cbS);
           }
 
           // 이름 (middle baseline)
-          txt(g.name, cbX + cbS + 10, rowMidY,
+          txt(g.name, cbX + cbS + 7, rowMidY,
             {
               align: "left",
               color: ck ? palette.ink : palette.inkMute,
-              font:  ck ? '500 17px "Noto Sans KR", sans-serif'
-                        : '400 16px "Noto Sans KR", sans-serif'
+              font:  ck ? '500 12.5px "Noto Sans KR", sans-serif'
+                        : '300 12px "Noto Sans KR", sans-serif'
             });
           y += itemH;
         }
@@ -1339,12 +1276,11 @@ function App() {
     }
 
     // ── 푸터 ──
-    txt("—  스쿠에니 유루스마지  —", W/2, H - 64,
-      { align:"center", color: palette.inkMute, font: 'italic 400 18px "Cormorant Garamond", serif' });
-    const datestr = new Date().toLocaleDateString("ko-KR", {year:"numeric",month:"2-digit",day:"2-digit"});
-    txt("Made by " + MADE_BY + "   ·   " + SITE_URL + "   ·   " + datestr,
-      W/2, H - 36,
-      { align:"center", color: palette.inkSoft, font: '500 14px "JetBrains Mono", monospace' });
+    txt("—  스쿠에니 유루스마지  —", W/2, H - 44,
+      { align:"center", color: palette.inkMute, font: 'italic 400 13px "Cormorant Garamond", serif' });
+    txt(new Date().toLocaleDateString("ko-KR", {year:"numeric",month:"2-digit",day:"2-digit"}),
+      W/2, H - 24,
+      { align:"center", color: palette.inkMute, font: '500 10px "JetBrains Mono", monospace' });
 
     const a = document.createElement("a");
     a.download = "ff_progress_" + new Date().toISOString().split("T")[0] + ".png";
@@ -1388,10 +1324,6 @@ function App() {
             </div>
           )}
 
-          {twitterId.trim() && (
-            <div className="twt-line">@{twitterId.trim()}</div>
-          )}
-
           <div className="progress-card">
             <div className="seal">
               <div className="seal-star"></div>
@@ -1423,15 +1355,12 @@ function App() {
           <div className="actions">
             <div className="twt">
               <div className="twt-at">@</div>
-              <input placeholder="트위터 아이디 (선택)" value={twitterId} onChange={e=>setTwitterId(e.target.value)} />
+              <input placeholder="twitter id (optional)" value={twitterId} onChange={e=>setTwitterId(e.target.value)} />
             </div>
             <button className="btn btn-primary" onClick={exportImage} disabled={saving}>
-              {saving ? "내보내는 중..." : "이미지 내보내기"}
+              {saving ? "EXPORTING..." : "Export Image"}
             </button>
-            <button className="btn" onClick={copyUrl}>
-              {copied ? "✓ 복사됨" : "링크 복사"}
-            </button>
-            <button className="btn btn-danger" onClick={()=>{ if(confirm("전체 기록을 초기화할까요?")) setPlayed({}); }}>초기화</button>
+            <button className="btn btn-danger" onClick={()=>{ if(confirm("전체 기록을 초기화할까요?")) setPlayed({}); }}>Reset</button>
           </div>
         </div>
 
@@ -1498,26 +1427,14 @@ function App() {
       </div>
 
       <TweaksPanel title="Tweaks">
-        <TweakSection label="테마" />
+        <TweakSection label="Theme" />
         <TweakRadio
-          label="배경 테마"
+          label="테마"
           value={tw.theme}
           options={["parchment","midnight","minimal"]}
           onChange={(v)=>setTweak("theme", v)}
         />
-        <TweakSection label="한글 제목 폰트" />
-        <TweakSelect
-          label="진도 글꼴"
-          value={tw.koFont}
-          options={[
-            {value:"notoSerif", label:"Noto Serif KR (세리프)"},
-            {value:"gowun",     label:"Gowun Batang (따뜻한 세리프)"},
-            {value:"myeongjo",  label:"Nanum Myeongjo (명조)"},
-            {value:"blackHan",  label:"Black Han Sans (굵은 산세리프)"},
-          ]}
-          onChange={(v)=>setTweak("koFont", v)}
-        />
-        <TweakSection label="표시" />
+        <TweakSection label="Display" />
         <TweakToggle label="로만 숫자 강조" value={tw.showRomanHero} onChange={(v)=>setTweak("showRomanHero", v)} />
         <TweakToggle label="발매 연도 표시" value={tw.showYears} onChange={(v)=>setTweak("showYears", v)} />
         <TweakToggle label="logos/ 폴더 로고 사용" value={tw.useLogosIfAvailable} onChange={(v)=>setTweak("useLogosIfAvailable", v)} />
